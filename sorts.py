@@ -1,32 +1,57 @@
 # 1. Bubble Sort============================
+# Bubble Sort is the simplest sorting algorithm that works by repeatedly swapping the adjacent elements if they are in wrong order.
+# https://www.geeksforgeeks.org/bubble-sort/
 
-def bubble_sort(alist):
-    for passnum in range(len(alist) - 1, 0, -1):
-        for i in range(passnum):
-            if alist[i] > alist[i + 1]:
-                temp = alist[i]
-                alist[i] = alist[i + 1]
-                alist[i + 1] = temp
+# An optimized version of Bubble Sort
+def bubbleSort(arr):
+    n = len(arr)
+
+    # Traverse through all array elements
+    for i in range(n):
+        swapped = False
+
+        # Last i elements are already
+        #  in place
+        for j in range(0, n - i - 1):
+
+            # traverse the array from 0 to
+            # n-i-1. Swap if the element
+            # found is greater than the
+            # next element
+            if arr[j] > arr[j + 1]:
+                arr[j], arr[j + 1] = arr[j + 1], arr[j]
+                swapped = True
+
+        # IF no two elements were swapped
+        # by inner loop, then break
+        if swapped == False:
+            break
 
 
-alist = [54, 26, 93, 17, 77, 31, 44, 55, 20]
-bubble_sort(alist)
-print(alist)
+# Driver code to test above
+arr = [64, 34, 25, 12, 22, 11, 90]
+
+bubbleSort(arr)
+
 
 
 # 2. selectionSort========================
+# https://www.geeksforgeeks.org/selection-sort/
+def selection_sort(A):
 
-def selection_sort(alist):
-    for fillslot in range(len(alist) - 1, 0, -1):
-        positionOfMax = 0
-        for location in range(1, fillslot + 1):
-            if alist[location] > alist[positionOfMax]:
-                positionOfMax = location
+    # Traverse through all array elements
+    for i in range(len(alist)):
 
-        temp = alist[fillslot]
-        alist[fillslot] = alist[positionOfMax]
-        alist[positionOfMax] = temp
+        # Find the minimum element in remaining
+        # unsorted array
+        min_idx = i
+        for j in range(i + 1, len(A)):
+            if A[min_idx] > A[j]:
+                min_idx = j
 
+                # Swap the found minimum element with
+        # the first element
+        A[i], A[min_idx] = A[min_idx], A[i]
 
 alist = [54, 26, 93, 17, 77, 31, 44, 55, 20]
 selection_sort(alist)
@@ -34,6 +59,7 @@ print(alist)
 
 
 # 3. The Insertion Sort=====================
+# https://www.geeksforgeeks.org/insertion-sort/
 
 def insertion_sort(alist):
     for index in range(1, len(alist)):
@@ -53,40 +79,9 @@ insertion_sort(alist)
 print(alist)
 
 
-# 4. shellSort ====================
-
-def shell_sort(alist):
-    sublistcount = len(alist) // 2
-    while sublistcount > 0:
-
-        for startposition in range(sublistcount):
-            gap_insertion_sort(alist, startposition, sublistcount)
-
-        print("After increments of size", sublistcount,
-              "The list is", alist)
-
-        sublistcount = sublistcount // 2
 
 
-def gap_insertion_sort(alist, start, gap):
-    for i in range(start + gap, len(alist), gap):
-
-        currentvalue = alist[i]
-        position = i
-
-        while position >= gap and alist[position - gap] > currentvalue:
-            alist[position] = alist[position - gap]
-            position = position - gap
-
-        alist[position] = currentvalue
-
-
-alist = [54, 26, 93, 17, 77, 31, 44, 55, 20]
-shell_sort(alist)
-print(alist)
-
-
-# 5. The Merge Sort===================
+# 4. The Merge Sort===================
 
 def merge_sort(alist):
     print("Splitting ", alist)
@@ -127,7 +122,7 @@ merge_sort(alist)
 print(alist)
 
 
-# 6 . Quick sort===========================================
+# 5 . Quick sort===========================================
 
 def quick_sort(alist):
     quick_sort_helper(alist, 0, len(alist) - 1)

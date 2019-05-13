@@ -1,4 +1,5 @@
 #1. Stack=======================================
+# An collection of items where items are added to and removed from the end called the “top.”
 class Stack:
     def __init__(self):
         self.items = []
@@ -19,6 +20,11 @@ class Stack:
         return len(self.items)
 
 #2. Queue===================================
+#A queue is an collection of items where the addition of new items happens at one end, called the “rear,”
+# and the removal of existing items occurs at the other end, commonly called the “front.”
+# As an element enters the queue it starts at the rear and makes its way toward the front,
+# waiting until that time when it is the next element to be removed.
+
 
 class Queue:
     def __init__(self):
@@ -38,7 +44,7 @@ class Queue:
 
 
 #3. Linked list=============================================
-
+# is a collection of items where each item holds a relative position with respect to the others. Some possible unordered list operations are given below.
 class Node:
     def __init__(self, initdata):
         self.data = initdata
@@ -241,31 +247,28 @@ def is_bst(root, l=None, r=None):
 
     return is_bst(root.left, l, root) and is_bst(root.right, root, r)
 
+# A binary tree is balanced if for each node in the tree, the difference between the height of the right subtree and the left subtree is at most one.
+# https://www.afternerd.com/blog/python-check-tree-balanced/
 
-# utility class to pass height object
-class Height:
-    def __init__(self):
-        self.height = 0
-
-
-def is_balanced(root, height):
-    lh = Height()
-    rh = Height()
-
+def is_balanced_helper(root):
     if root is None:
-        return True
+        return 0
 
-    l = is_balanced(root.left, lh)
-    r = is_balanced(root.right, rh)
+    left_height = is_balanced_helper(root.left)
+    if left_height == -1:
+        return -1
 
-    height.height = max(lh.height, rh.height) + 1
+    right_height = is_balanced_helper(root.right)
+    if right_height == -1:
+        return -1
 
-    if abs(lh.height - rh.height) <= 1:
-        return l and r
+    if abs(left_height - right_height) > 1:
+        return -1
 
-    return False
+    return max(left_height, right_height) + 1
 
-
+def is_balanced(root):
+    return is_balanced_helper(root) > -1
 
 
 r = TreeNode(55)
@@ -279,8 +282,4 @@ insert_node(r, TreeNode(85))
 # Print inoder traversal of the BST
 in_order_traversal(r)
 
-h = Height()
-if is_balanced(r,h):
-    print("Tree is balanced")
-else:
-    print("Tree is not balanced")
+
