@@ -96,3 +96,15 @@ def find_max_char(str_char):
 
 newstr = "asadddddasaadsd"
 print(find_max_char(newstr))
+
+# Find square root of number without built in function
+
+def find_square(num):
+  g = 0.00001
+  a = 0.00001
+
+  while abs((g*g) - num) > a:
+    g = (g + (num/g))/2
+  return g
+
+print(find_square(9))
