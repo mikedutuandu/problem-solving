@@ -108,3 +108,26 @@ def find_square(num):
   return g
 
 print(find_square(9))
+
+
+# How to sort a single string without using any library functions with O(N) time complexity
+MAX_CHAR = 26
+
+
+def sort_str(str1):
+    char_count = []
+    for i in range(0, MAX_CHAR, 1):
+        char_count.insert(i, 0)
+
+    for i in str1:
+        char_count[ord(i) - ord("a")] += 1
+
+    sorted_str = []
+    for i in range(0, MAX_CHAR, 1):
+        for j in range(0, char_count[i], 1):
+            sorted_str.append(chr(ord("a") + i))
+
+    return "".join(sorted_str)
+
+
+print(sort_str("jgsfsfhbwea"))
