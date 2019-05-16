@@ -131,3 +131,17 @@ def sort_str(str1):
 
 
 print(sort_str("jgsfsfhbwea"))
+
+# Give an array, a target =9, find an algorithm print 2 element in this array has the total equal target with time complex is n
+def find_pair_sum_with_target(list1,targer):
+  for i in list1:
+    if (targer-i) in list1:
+      print(i,targer-i)
+      list1.remove(i)
+      list1.remove(targer-i)
+
+
+
+list1 = [1,5,3,7,5,6,7,8]
+
+find_pair_sum_with_target(list1,10)
