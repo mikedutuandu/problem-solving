@@ -3,6 +3,11 @@
 # https://www.geeksforgeeks.org/bubble-sort/
 
 # An optimized version of Bubble Sort
+
+#Worst Case Time Complexity [ Big-O ](reverse sort): O(n2)
+#Best Case Time Complexity [Big-omega](ist is already sorted): O(n)
+#Average Time Complexity [Big-theta]: O(n2)
+#Space Complexity: O(1)
 def bubbleSort(arr):
     n = len(arr)
 
@@ -37,6 +42,13 @@ bubbleSort(arr)
 
 # 2. selectionSort========================
 # https://www.geeksforgeeks.org/selection-sort/
+#Worst Case Time Complexity [ Big-O ]: O(n2)
+
+#Best Case Time Complexity [Big-omega]: O(n2)
+
+#Average Time Complexity [Big-theta]: O(n2)
+
+#Space Complexity: O(1)
 def selection_sort(A):
 
     # Traverse through all array elements
@@ -60,6 +72,13 @@ print(alist)
 
 # 3. The Insertion Sort=====================
 # https://www.geeksforgeeks.org/insertion-sort/
+#Worst Case Time Complexity [ Big-O ]: O(n2)
+
+#Best Case Time Complexity [Big-omega](already sorted ): O(n)
+
+#Average Time Complexity [Big-theta]: O(n2)
+
+#Space Complexity: O(1)
 
 def insertion_sort(alist):
     for index in range(1, len(alist)):
@@ -82,6 +101,9 @@ print(alist)
 
 
 # 4. The Merge Sort===================
+
+
+
 
 def merge_sort(alist):
     print("Splitting ", alist)
