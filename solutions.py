@@ -146,7 +146,9 @@ list1 = [1,5,3,7,5,6,7,8]
 
 find_pair_sum_with_target(list1,10)
 
-#Implement Linked list , delete node with O(1) :https://leetcode.com/problems/delete-node-in-a-linked-list/solution/
+#Implement Linked list ,
+# 1 .delete node with O(1) :https://leetcode.com/problems/delete-node-in-a-linked-list/solution/
+# 2. Reverse a linked list https://www.geeksforgeeks.org/reverse-a-linked-list/
 class Node:
     def __init__(self, init_data):
         self.data = init_data
@@ -176,6 +178,20 @@ class LinkedList:
     def remove(self, node):
         node.data = node.next_node.data
         node.next_node = node.next_node.next_node
+
+    def reverse(self):
+        current = self.head
+        prev = Node
+        next = Node
+
+        while current != None:
+            next = current.get_next_node()
+            current.set_next_node(prev)
+            prev = current
+            current = next
+
+        self.head = prev
+
 
 
 lk1 = LinkedList()
