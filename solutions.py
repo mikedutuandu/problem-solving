@@ -145,3 +145,54 @@ def find_pair_sum_with_target(list1,targer):
 list1 = [1,5,3,7,5,6,7,8]
 
 find_pair_sum_with_target(list1,10)
+
+#Implement Linked list , delete node with O(1) :https://leetcode.com/problems/delete-node-in-a-linked-list/solution/
+class Node:
+    def __init__(self, init_data):
+        self.data = init_data
+        self.next_node = None
+
+    def get_data(self):
+        return self.data
+
+    def get_next_node(self):
+        return self.next_node
+
+    def set_data(self, data):
+        self.data = data
+
+    def set_next_node(self, node):
+        self.next_node = node
+
+
+class LinkedList:
+    def __init__(self):
+        self.head = None
+
+    def add(self, node):
+        node.next_node = self.head
+        self.head = node
+
+    def remove(self, node):
+        node.data = node.next_node.data
+        node.next_node = node.next_node.next_node
+
+
+lk1 = LinkedList()
+
+node1 = Node(1)
+lk1.add(node1)
+
+node2 = Node(2)
+lk1.add(node2)
+
+node3 = Node(2)
+lk1.add(node3)
+
+lk1.remove(node2)
+
+
+
+
+
+
