@@ -101,7 +101,13 @@ print(alist)
 
 
 # 4. The Merge Sort===================
+#Worst Case Time Complexity [ Big-O ]: O(n*log n)
 
+#Best Case Time Complexity [Big-omega]: O(n*log n)
+
+#Average Time Complexity [Big-theta]: O(n*log n)
+
+#Space Complexity: O(n)
 
 
 
@@ -145,6 +151,14 @@ print(alist)
 
 
 # 5 . Quick sort===========================================
+#Worst Case Time Complexity [ Big-O ]: O(n2)
+
+#Best Case Time Complexity [Big-omega]: O(n*log n)
+
+#Average Time Complexity [Big-theta]: O(n*log n)
+
+#Space Complexity: O(n*log n)
+
 
 def quick_sort(alist):
     quick_sort_helper(alist, 0, len(alist) - 1)
