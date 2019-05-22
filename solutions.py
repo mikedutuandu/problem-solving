@@ -27,6 +27,9 @@ class library:
         for book in self.items:
             book.percent = (book.weight * 100) / total_weight
 
+# 1. while cho den khi lay du so number
+# 2. tao 1 random tu 1-100
+# 3. ung voi moi random, duyen list de lay dung book base tren compare random number va percent of book
     def get_recommend(self, number):
         self.set_percent()
         recommend = []
@@ -47,6 +50,15 @@ class library:
 
             if random_item != None:
                 recommend.append(random_item)
+
+        return recommend
+
+    def get_basic_random(self, number=5):
+        recommend = []
+
+        while len(recommend) <= number:
+            rand_pos = random.randint(0, len(self.items) - 1)
+            recommend.append(self.items[rand_pos])
 
         return recommend
 
