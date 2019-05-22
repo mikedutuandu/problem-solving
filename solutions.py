@@ -88,6 +88,8 @@ rec = lib.get_recommend(3)
 browse(rec)
 
 # Find kth most occurred character
+# 1. duyet str roi bo vo 1 dict voi key la ki tu, value la so lan xuat hien cua ki tu do
+# 2. duyet dict va tim thang key nao co value lon nhat
 
 def find_max_char(str_char):
   l = {}
@@ -110,6 +112,9 @@ newstr = "asadddddasaadsd"
 print(find_max_char(newstr))
 
 # Find square root of number without built in function
+#. 1. chon 1 so g nho doan no la can bac 2 cua num, chon 1 sai so chap nhan dc a
+# 2. lap cho den khi nao chon dc g -> num/2(trung binh cong: vd g = ((4+ 16/4))/2 ) thoa : g = (g+num/g)/2
+
 
 def find_square(num):
   g = 0.00001
@@ -123,6 +128,9 @@ print(find_square(9))
 
 
 # How to sort a single string without using any library functions with O(N) time complexity
+# 1. init 1 list 26 ki ty tu dem ki tu xuat hien tu a->z
+#. 2 dem kitu xuat hien trong mang (dua vao chuyen kitu sang so interger)
+# 3. duyen cais list tren a in ra theo thu tu a->z
 MAX_CHAR = 26
 
 
