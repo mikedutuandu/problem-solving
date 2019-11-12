@@ -1,6 +1,5 @@
 #get random base on weight
 
-
 import random
 
 
@@ -8,48 +7,39 @@ class book:
     def __init__(self, name, weight):
         self.name = name
         self.weight = weight
-        self.percent = None
 
 
 class library:
 
     def __init__(self):
         self.items = []
+        self.total_weight = 0
 
     def add(self, book):
         self.items.append(book)
 
-    def set_percent(self):
-        total_weight = 0
+    def set_total_weight(self):
         for book in self.items:
-            total_weight += book.weight
+            self.total_weight += book.weight
 
-        for book in self.items:
-            book.percent = (book.weight * 100) / total_weight
 
 # 1. while cho den khi lay du so number
 # 2. tao 1 random tu 1-100
 # 3. ung voi moi random, duyen list de lay dung book base tren compare random number va percent of book
     def get_recommend(self, number):
-        self.set_percent()
+        self.set_total_weight()
         recommend = []
 
         list_book = list(self.items)
         while len(recommend) < number:
 
-            rand = random.randint(0, 100)
-            random_item = None
-            compare = self.items[0].percent
+            rand = random.randint(0, self.total_weight)
+
             for index, book in enumerate(list_book):
-                if rand < compare:
-                    random_item = book
-                    del list_book[index]
+                rand = rand - book.weight
+                if rand <= 0:
+                    recommend.append(book)
                     break
-
-                compare += book.percent
-
-            if random_item != None:
-                recommend.append(random_item)
 
         return recommend
 
@@ -70,12 +60,12 @@ def browse(list_data):
 
 lib = library()
 
-b1 = book('b1', 2)
+b1 = book('b1', 1)
 
-b2 = book('b2', 4)
-b3 = book('b3', 3)
-b4 = book('b4', 4)
-b5 = book('b5', 8)
+b2 = book('b2', 1)
+b3 = book('b3', 100)
+b4 = book('b4', 1)
+b5 = book('b5', 1)
 
 lib.add(b1)
 lib.add(b2)
@@ -172,19 +162,19 @@ find_pair_sum_with_target(list1,10)
 class Node:
     def __init__(self, init_data):
         self.data = init_data
-        self.next_node = None
+        self.next = None
 
     def get_data(self):
         return self.data
 
-    def get_next_node(self):
-        return self.next_node
+    def get_next(self):
+        return self.next
 
     def set_data(self, data):
         self.data = data
 
-    def set_next_node(self, node):
-        self.next_node = node
+    def set_next(self, node):
+        self.next = node
 
 
 class LinkedList:
@@ -192,21 +182,20 @@ class LinkedList:
         self.head = None
 
     def add(self, node):
-        node.next_node = self.head
+        node.next = self.head
         self.head = node
 
     def remove(self, node):
-        node.data = node.next_node.data
-        node.next_node = node.next_node.next_node
+        node.data = node.next.data
+        node.next = node.next.next
 
     def reverse(self):
         current = self.head
-        prev = Node
-        next = Node
+        prev = None
 
         while current != None:
-            next = current.get_next_node()
-            current.set_next_node(prev)
+            next = current.get_next()
+            current.set_next(prev)
             prev = current
             current = next
 
