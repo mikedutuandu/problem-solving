@@ -1,4 +1,5 @@
-# 1. Bubble Sort============================
+# 1. Bubble Sort============================dau
+#so sanh tung cap dua thang lon nhat ra sau
 # Bubble Sort is the simplest sorting algorithm that works by repeatedly swapping the adjacent elements if they are in wrong order.
 # https://www.geeksforgeeks.org/bubble-sort/
 
@@ -41,6 +42,7 @@ bubbleSort(arr)
 
 
 # 2. selectionSort========================
+# tim vi tri thang nho nhat dua ve dau
 # https://www.geeksforgeeks.org/selection-sort/
 #Worst Case Time Complexity [ Big-O ]: O(n2)
 
@@ -72,6 +74,7 @@ print(alist)
 
 # 3. The Insertion Sort=====================
 # https://www.geeksforgeeks.org/insertion-sort/
+# sap sep theo 1 chuoi co thu tu tang dan tu 1 den n
 #Worst Case Time Complexity [ Big-O ]: O(n2)
 
 #Best Case Time Complexity [Big-omega](already sorted ): O(n)
