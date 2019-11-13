@@ -71,11 +71,6 @@ class UnorderedList:
     def isEmpty(self):
         return self.head == None
 
-    def add(self, item):
-        temp = Node(item)
-        temp.setNext(self.head)
-        self.head = temp
-
     def size(self):
         current = self.head
         count = 0
@@ -85,16 +80,10 @@ class UnorderedList:
 
         return count
 
-    def search(self, item):
-        current = self.head
-        found = False
-        while current != None and not found:
-            if current.getData() == item:
-                found = True
-            else:
-                current = current.getNext()
-
-        return found
+    def add(self, item):
+        temp = Node(item)
+        temp.setNext(self.head)
+        self.head = temp
 
     def remove(self, item):
         current = self.head
@@ -111,6 +100,18 @@ class UnorderedList:
             self.head = current.getNext()
         else:
             previous.setNext(current.getNext())
+
+    def search(self, item):
+        current = self.head
+        found = False
+        while current != None and not found:
+            if current.getData() == item:
+                found = True
+            else:
+                current = current.getNext()
+
+        return found
+
 
 
 mylist = UnorderedList()
@@ -177,17 +178,6 @@ class OrderedList:
             temp.setNext(current)
             previous.setNext(temp)
 
-    def isEmpty(self):
-        return self.head == None
-
-    def size(self):
-        current = self.head
-        count = 0
-        while current != None:
-            count = count + 1
-            current = current.getNext()
-
-        return count
 
 
 mylist = OrderedList()
@@ -204,7 +194,7 @@ print(mylist.search(100))
 
 
 # 4. Binary search tree( BTS )==============================
-
+#IMPORTANT: DIEM HOI QUY LA 1 NODE CO LEFT VA RIGHT = NONE
 class TreeNode:
     def __init__(self, key):
         self.left = None
@@ -255,12 +245,7 @@ def is_balanced_helper(root):
         return 0
 
     left_height = is_balanced_helper(root.left)
-    if left_height == -1:
-        return -1
-
     right_height = is_balanced_helper(root.right)
-    if right_height == -1:
-        return -1
 
     if abs(left_height - right_height) > 1:
         return -1
@@ -282,4 +267,46 @@ insert_node(r, TreeNode(85))
 # Print inoder traversal of the BST
 in_order_traversal(r)
 
+
+#tinh tinh trung cong data cac node tree
+TOTAL = 0
+NUM_NODE = 0
+def avg_help(root):
+    if root is not None:
+        avg_help(root.left)
+        global TOTAL
+        global NUM_NODE
+        TOTAL += root.data
+        NUM_NODE += 1
+        avg_help(root.right)
+
+def avg(root):
+    avg_help(root)
+    return TOTAL/NUM_NODE
+
+print(avg(r))
+
+#tim 1 gia tri trong cay xem co hay ko
+FOUND = False
+def search_tree(r,data):
+    if r is not None:
+        search_tree(r.left,data)
+        if r.data == data:
+            global FOUND
+            FOUND = True
+        search_tree(r.right,data)
+
+#tim node co data lon nhat
+MAX = r.data
+def max_node_tree(r):
+    global MAX
+    if r is not None:
+        max_node_tree(r.left)
+        if r.data > MAX:
+            MAX = r.data
+        max_node_tree(r.right)
+
+
+print(max_node_tree(r))
+print(MAX)
 
