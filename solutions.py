@@ -268,6 +268,121 @@ q.EnQueue(30)
 q.EnQueue(40)
 q.EnQueue(50)
 
+##1. find paths of given node [input list of connected nodes)-[tenpoint7]
+
+graph = [
+    ["A", "B"],
+    ["B", "D"],
+    ["D", "E"],
+    ["E", "F"],
+    ["B", "C"],
+    ["C", "F"]]
+
+
+def find_recursive(list,node,result=[]):
+    num_path_each_node = find_match(list, node)
+    if len(num_path_each_node) >0:
+        for end in num_path_each_node:
+            result.append([node,end])
+            find_recursive(list,end,result)
+    return result
+
+def find_match(graph, node):
+    num_path_each_node = []
+    for path_graph in graph:
+        if node in path_graph and node == path_graph[0]:
+            num_path_each_node.append(path_graph[1])
+    return num_path_each_node
+
+
+a = find_recursive(graph,"A")
+print(a)
+
+#2. find longest rest time(number of minute)[input is a list schedule from monday to sunday]-[axon]
+
+def get_num_from_day(day):
+    if day =="Mon":
+        return 0
+    elif day == "Tue":
+        return 1
+    elif day == "Wed":
+        return 2
+    elif day == "Thu":
+        return 3
+    elif day == "Fri":
+        return 4
+    elif day == "Sat":
+        return 5
+    else:
+        return 6
+
+
+def format_data(raw_data):
+    process_data = raw_data.split("\n")
+    data = {}
+    for i in process_data:
+        tmp = i.split(" ")
+        num_day = get_num_from_day(tmp[0])
+        if num_day not in data:
+            data[num_day] = [tmp[1]]
+        else:
+            tmp_v = data[num_day]
+            tmp_v.append(tmp[1])
+            data[num_day] = tmp_v
+    return data
+
+def change_to_m(day,schedule):
+    plus = day * 1440
+    tmp = schedule.split("-")
+    point_arr1 = tmp[0].split(":")
+    point1 = int(point_arr1[0])*60 + int(point_arr1[1]) + plus
+
+    point_arr2 = tmp[1].split(":")
+    point2 = int(point_arr2[0])*60 + int(point_arr2[1]) + plus
+    return point1, point2
+
+def get_time_line(data):
+    list_meeting = []
+    time_line_data = [0]
+    data = format_data(data)
+    # print(data)
+    for day,schedules in data.items():
+        for schedule in schedules:
+            new_schedule = change_to_m(day,schedule)
+            list_meeting.append([new_schedule[0],new_schedule[1]])
+            if new_schedule[0] not in time_line_data:
+                time_line_data.append(new_schedule[0])
+            if new_schedule[1] not in time_line_data:
+                time_line_data.append(new_schedule[1])
+    time_line_data.append(10080)
+    time_line_data.sort()
+
+    #count max
+    max = 0
+    for i in range(0,len(time_line_data)-1):
+        start = time_line_data[i]
+        end = time_line_data[i+1]
+        #check is schedule or not
+        tmp = [start,end]
+        if tmp not in list_meeting:
+            if max < end - start:
+                max = end - start
+                # print(start)
+                # print(end)
+    return max
+
+
+    return time_line_data,list_meeting
+
+
+
+a= "Mon 01:00-23:00\nTue 01:00-23:00\nWed 01:00-23:00\nThu 01:00-23:00\nFri 01:00-23:00\nSat 01:00-20:00\nSun 01:00-21:00"
+
+
+print(get_time_line(a))
+
+
+
 
 
 
