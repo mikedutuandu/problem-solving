@@ -282,9 +282,29 @@ def avg_help(root):
 
 def avg(root):
     avg_help(root)
+    if TOTAL == 0 or NUM_NODE == 0
+        return 0
     return TOTAL/NUM_NODE
 
+
+def avg_help_1(root,total=0,num_node=0):
+    if root is not None:
+        total,num_node = avg_help_1(root.left,total,num_node)
+
+        total += root.data
+        num_node += 1
+        total,num_node = avg_help_1(root.right,total,num_node)
+    return total,num_node
+
+def avg_1(root):
+    
+   total,num_node = avg_help_1(root)
+   if total ==0 or num_node == 0:
+        return 0
+   return total/num_node
+
 print(avg(r))
+print(avg_1(r))
 
 #tim 1 gia tri trong cay xem co hay ko
 FOUND = False
@@ -296,8 +316,16 @@ def search_tree(r,data):
             FOUND = True
         search_tree(r.right,data)
 
+def search_tree_1(r,data,found=0):
+    if r is not None:
+        found = search_tree_1(r.left,data,found)
+        if r.data == data:
+            found += 1
+        found = search_tree_1(r.right,data,found)
+    return found
+
 #tim node co data lon nhat
-MAX = r.data
+MAX = 0
 def max_node_tree(r):
     global MAX
     if r is not None:
@@ -305,6 +333,14 @@ def max_node_tree(r):
         if r.data > MAX:
             MAX = r.data
         max_node_tree(r.right)
+
+def max_node_tree_1(r,max_data=0):
+    if r is not None:
+        max_data = max_node_tree_1(r.left,max_data)
+        if r.data > max_data:
+            max_data = r.data
+        max_data = max_node_tree_1(r.right,max_data)
+    return max_data
 
 
 print(max_node_tree(r))
