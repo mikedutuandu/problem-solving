@@ -54,7 +54,7 @@ bubbleSort(arr)
 def selection_sort(A):
 
     # Traverse through all array elements
-    for i in range(len(alist)):
+    for i in range(len(A)):
 
         # Find the minimum element in remaining
         # unsorted array
