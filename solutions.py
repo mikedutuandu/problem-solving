@@ -382,7 +382,7 @@ a= "Mon 01:00-23:00\nTue 01:00-23:00\nWed 01:00-23:00\nThu 01:00-23:00\nFri 01:0
 print(get_time_line(a))
 
 ##3. Implement stack by linkedlist, write func find max item with n(1)
-#=>add to each note the currrent max value
+#=> them con tro max den max item
 
 ##4 doi tien te
 def calculate_rate(cur1, cur2, rates):
