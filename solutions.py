@@ -384,6 +384,88 @@ print(get_time_line(a))
 ##3. Implement stack by linkedlist, write func find max item with n(1)
 #=>add to each note the currrent max value
 
+##4 doi tien te
+def calculate_rate(cur1, cur2, rates):
+    # The rates is supposed to be 
+    # the array of 3 items array [currency1, currency2, rate]
+
+    # convert the input to a graph
+    graph = convert(rates)
+
+    # Now we're going to use bfs to find all the paths 
+    # from cur1 to cur2
+    # queue is to store the next currency to travel
+    queue = []
+    # initiate the queue with the cur1 
+    queue.append(cur1)
+
+    # While traveling along the currency, we want to keep tracks of 
+    # the current calculated rate here.
+    calculated_rates = []
+    # Init the current calculated rates with value 1
+    calculated_rates.append(1)
+
+    # To avoid infinite loop, we need to push the currency we already traveled
+    # to the seen list
+    seen = set()
+
+    # Here is the result list
+    result = []
+    
+    # Loop until the queue is empty
+    while len(queue) > 0:
+        # Pop the current currency
+        current = queue.pop()
+        calculated_rate = calculated_rates.pop()
+        # Check if the current is in the graph or not
+        if current in graph:
+            for neighbor in graph[current]:
+                next_rate = graph[current][neighbor] * calculated_rate
+                # Check if neighbor is the target currency
+                if neighbor == cur2:
+                    result.append(next_rate)
+                else:
+                    # Check if the neighbor is not in the seen list
+                    if neighbor not in seen:
+                        # We should push this to the queue for next travel
+                        queue.append(neighbor)
+                        # along with the rate
+                        calculated_rates.append(next_rate)
+
+            # We finish this current node
+            # so add this one to the seen
+            seen.add(current)
+
+    return result
+
+def convert(rates):
+    graph = {}
+    for rate in rates:
+        if rate[0] not in graph:
+            # define another dictionary to hold all the 
+            # neighbor node
+            graph[rate[0]] = {}
+        # now setup the graph
+        graph[rate[0]][rate[1]] = rate[2]
+        if rate[1] not in graph:
+            graph[rate[1]] = {}
+        # calculate the convert rate
+        graph[rate[1]][rate[0]] = 1 / rate[2]
+
+    return graph
+
+rates = [
+    ['jpy', 'usd', 1],
+    ['jpy', 'eur', 2],
+    ['usd', 'cad', 3],
+    ['usd', 'aud', 4],
+    ['usd', 'pond', 5],
+    ['pond', 'sfr', 6],
+    ['eur', 'sfr', 7]
+]
+
+print(calculate_rate('jpy', 'sfr', rates))
+
 
 
 
