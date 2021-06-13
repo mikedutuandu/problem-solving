@@ -55,38 +55,26 @@ Output: "0B0C"
 function getHint(secret, guess) {
     let numB = 0;
     let numC = 0;
+    //count B
     for(let index in secret){
-        console.log(index);
-        //count B
         if(secret[index] === guess[index]){
             numB++;
             secret = secret.substr(0,index) + secret.substr(index + 1);
             guess = guess.substr(0,index) + guess.substr(index + 1);
-
-            console.log('sescret:',secret);
-            console.log('guest:',guess);
         }
 
     }
-    console.log('sescret1:',secret);
-    console.log('guest1:',guess);
-
-    // O(n^2)
+    //105
+    //610
+    //count C
     for(let index in secret){
-        console.log(index);
-        //count C
-        //if(secret[index] !== guess[index]){
-        if(guess.includes(secret[index])){
+        let gIndex = guess.indexOf(secret[index]);
+        if(gIndex > -1){
             numC++;
-            let gIndex = guess.indexOf(secret[index]);
             guess = guess.substr(0,gIndex) + guess.substr(gIndex + 1);
         }
-        //}
     }
 
-
-    console.log('numB:',numB);
-    console.log('numC:',numC);
     const output = numB + 'B' + numC + 'C';
     return output;
 }
