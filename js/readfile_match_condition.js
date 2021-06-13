@@ -38,10 +38,10 @@ async function getListWord() {
     let length = stats.size;
 
     const fh = await fs.open(path, 'r');
-    const buffer = Buffer.alloc(length, 0);
-    const {bytesRead} = await fh.read(buffer, 0, length);
+    const buffer = Buffer.alloc(length);
+    await fh.read(buffer, 0, length);
 
-    const lines = buffer.toString('utf-8', 0, bytesRead).split('\n');
+    const lines = buffer.toString('utf-8').split('\n');
     let result = [];
     for (let line of lines) {
         if (isCorrectWord(line)) {
