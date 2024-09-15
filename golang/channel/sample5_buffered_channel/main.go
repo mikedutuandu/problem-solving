@@ -1,20 +1,28 @@
 package main
 
-import (
-	"fmt"
-)
+import "fmt"
 
 func main() {
-	// Create a buffered channel with a capacity of 2
-	channel := make(chan int, 2)
+	numbers := make(chan int, 10)
 
-	// Send data into the channel (non-blocking since the buffer has space)
-	channel <- 10
-	channel <- 20
+	go func() {
+		for num := range numbers {
+			fmt.Println("Received:", num)
+		}
+	}()
 
-	// Receive data from the channel
-	fmt.Println(<-channel) // Output: 10
-	fmt.Println(<-channel) // Output: 20
+	numbers <- 1
+	numbers <- 1
+	numbers <- 1
+	numbers <- 1
+	numbers <- 1
+	numbers <- 1
+	numbers <- 1
+	numbers <- 1
+	numbers <- 1
+	numbers <- 111
+	//numbers <- 111 // this is 11 element > 10 then will block sender go routine and trigger receiver go routine
 
-	// The buffer is empty now, so sending or receiving would block
+	fmt.Printf("OK")
+
 }
