@@ -8,17 +8,17 @@ import (
 // The select statement waits for either channel1 or channel2 to send a message.
 // The first one to send will trigger the corresponding case.
 // If neither sends a message within 2 seconds, the time.After case triggers, simulating a timeout.
-func sendValues(channel chan string) {
+func sendValues(data string, channel chan string) {
 	time.Sleep(1 * time.Second)
-	channel <- "message from sendValues"
+	channel <- data
 }
 
 func main() {
 	channel1 := make(chan string)
 	channel2 := make(chan string)
 
-	go sendValues(channel1)
-	go sendValues(channel2)
+	go sendValues("m1", channel1)
+	go sendValues("m2", channel2)
 
 	// Use select to wait for either channel to send a message
 	for {

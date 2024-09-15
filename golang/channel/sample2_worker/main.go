@@ -6,34 +6,41 @@ import (
 	"time"
 )
 
-func worker(id int, jobs <-chan int, wg *sync.WaitGroup) {
-	defer wg.Done() // Decrement the WaitGroup counter when the worker finishes
-	for job := range jobs {
-		fmt.Printf("Worker %d started job %d\n", id, job)
-		time.Sleep(time.Second) // Simulate work
-		fmt.Printf("Worker %d finished job %d\n", id, job)
+func worker(id int, jobs <-chan int, results chan int, wg *sync.WaitGroup) {
+	defer wg.Done()
+	for j := range jobs {
+		fmt.Println("worker", id, "started job", j)
+		time.Sleep(time.Second)
+		fmt.Println("worker", id, "finished job", j)
+		results <- j * 2
 	}
 }
 
 func main() {
-	const numJobs = 5
+	const numJobs = 10
 	jobs := make(chan int, numJobs)
-	var wg sync.WaitGroup
+	results := make(chan int, numJobs)
 
-	// Start 3 workers
-	for w := 1; w <= 3; w++ {
+	wg := &sync.WaitGroup{}
+
+	for i := 0; i < 3; i++ {
 		wg.Add(1)
-		go worker(w, jobs, &wg)
+		go worker(i, jobs, results, wg)
 	}
 
-	// Send jobs to workers
-	for j := 1; j <= numJobs; j++ {
-		jobs <- j
+	for i := 1; i <= numJobs; i++ {
+		jobs <- i
 	}
 	close(jobs)
 
 	// Wait for all workers to finish
-	wg.Wait()
+	wg.Wait()      // Wait for all workers to be done
+	close(results) // Close the results channel after workers finish
 
-	fmt.Println("All jobs have been processed.")
+	for result := range results {
+		fmt.Println(result)
+	}
+
+	fmt.Println("all jobs finished")
+
 }
