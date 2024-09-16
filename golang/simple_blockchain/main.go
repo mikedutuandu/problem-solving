@@ -28,16 +28,6 @@ type Block struct {
 // Blockchain is a slice of Blocks
 var Blockchain []Block
 
-// CalculateHash generates a hash for a block's data (including transactions)
-func CalculateHash(block Block) string {
-	record := fmt.Sprintf("%d%s%s", block.Index, block.Timestamp, block.PreviousHash)
-	for _, tx := range block.Transactions {
-		record += tx.TxHash // Include transaction hashes in block hash
-	}
-	hash := sha256.Sum256([]byte(record))
-	return hex.EncodeToString(hash[:])
-}
-
 // CreateTransaction creates a new transaction and returns it with a transaction hash
 func CreateTransaction(sender, receiver string, amount float64) Transaction {
 	tx := Transaction{
@@ -71,6 +61,16 @@ func CreateBlock(previousBlock Block, transactions []Transaction) Block {
 	}
 	newBlock.Hash = CalculateHash(newBlock)
 	return newBlock
+}
+
+// CalculateHash generates a hash for a block's data (including transactions)
+func CalculateHash(block Block) string {
+	record := fmt.Sprintf("%d%s%s", block.Index, block.Timestamp, block.PreviousHash)
+	for _, tx := range block.Transactions {
+		record += tx.TxHash // Include transaction hashes in block hash
+	}
+	hash := sha256.Sum256([]byte(record))
+	return hex.EncodeToString(hash[:])
 }
 
 // MintBlock creates a new block every 2 seconds with dummy transactions
