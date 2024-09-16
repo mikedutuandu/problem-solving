@@ -2,6 +2,14 @@ package main
 
 import "fmt"
 
+/*
+Binary Search is a fast way to find an item in a sorted list.
+It works by checking the middle item in the list first.
+If the middle item is the target, you’re done!
+If the target is smaller, search the left half.
+If the target is bigger, search the right half.
+Keep cutting the list in half until you find the target or the list is empty.
+*/
 // binarySearch function
 func binarySearch(arr []int, target int) int {
 	low := 0
