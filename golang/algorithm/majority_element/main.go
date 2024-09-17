@@ -39,6 +39,15 @@ func majorityElement(nums []int) int {
 		}
 	}
 
+	// Check if candidate is the majority
+	//if count > len(nums)/2 {
+	//	return candidate
+	//} else {
+	//	// Handle the case where there's no majority element
+	//	// (depends on the problem definition how you want to deal with this case)
+	//	return -1 // Or any other placeholder value
+	//}
+
 	return candidate
 }
 
