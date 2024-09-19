@@ -8,9 +8,16 @@ import (
 
 /*
  RESTful API:
-Question: Explain what REST is and how it is different from SOAP. How would you design a RESTful API for an e-commerce application?
+Question: Explain what REST is and how it is different from SOAP.How would you design a RESTful API for an e-commerce application?
 
-Answer: REST (Representational State Transfer) is an architectural style for designing networked applications. It relies on stateless, client-server communication and typically uses HTTP protocols for interaction. RESTful APIs are commonly used to interact with web services. Unlike SOAP, which is a protocol with a strict standard for message format and transmission, REST is more flexible, supporting different data formats like JSON, XML, and plain text. RESTful APIs use standard HTTP methods like GET, POST, PUT, and DELETE to perform CRUD (Create, Read, Update, Delete) operations.
+Answer:
+REST (Representational State Transfer) is an architectural style for designing networked applications.
+It relies on stateless, client-server communication and typically uses HTTP protocols for interaction.
+REST is more flexible, supporting different data formats like JSON, XML, and plain text.
+RESTful APIs use standard HTTP methods like GET, POST, PUT, and DELETE to perform CRUD (Create, Read, Update, Delete) operations.
+
+Unlike SOAP, which is a protocol with a strict standard for message format and transmission,
+
 
 To design a RESTful API for an e-commerce application, we can structure it as follows:
 
