@@ -7,6 +7,23 @@ import (
 	"time"
 )
 
+/*
+Transaction Hash (Tx Hash)
+A transaction hash (or tx hash) is a unique code created by combining all the details of a blockchain transaction (like who sent it, who received it, the amount, and the time).
+It's like a fingerprint for the transaction. This hash helps keep track of the transaction in the blockchain.
+It's important because it makes each transaction easy to find, verify, and refer to later.
+
+Block in a Blockchain
+A block is a collection of transactions in a blockchain. Each block has two main parts:
+
+A header with information about the block, including a link to the previous block.
+The actual list of transactions.
+New blocks are added to the blockchain through mining (in Proof of Work systems) or validation (in Proof of Stake systems).
+In mining, computers solve difficult problems to add a new block, and the one that solves it first gets a reward.
+In Proof of Stake, validators confirm the block by staking tokens, and they get rewarded for doing so.
+This process ensures the blockchain grows securely, one block at a time.
+*/
+
 // Transaction represents a single transaction in the blockchain
 type Transaction struct {
 	Sender    string
