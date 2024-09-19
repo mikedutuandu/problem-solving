@@ -16,31 +16,6 @@ func strStr(haystack string, needle string) int {
 	return -1
 }
 
-func strStr1(haystack string, needle string) int {
-	i := 0
-	j := 0
-	count := 0
-	output := -1
-	for i < len(haystack) && j < len(needle) {
-		if needle[j] == haystack[i] {
-			j++
-			i++
-			count++
-		} else {
-			i = i - count + 1
-			j = 0
-			count = 0
-		}
-
-		if count == len(needle) {
-			output = i - len(needle)
-			break
-		}
-	}
-
-	return output
-}
-
 func main() {
 	haystack := "mississippi"
 	needle := "issip"
