@@ -16,7 +16,7 @@ func binarySearch(arr []int, target int) int {
 	high := len(arr) - 1
 
 	for low <= high {
-		mid := low + (high-low)/2
+		mid := (low + high) / 2
 
 		// Check if the target is at the mid position
 		if arr[mid] == target {
