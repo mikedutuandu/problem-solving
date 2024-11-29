@@ -1,10 +1,10 @@
 /*
 2 way to run ts file
-+ First way
-    tsc index.ts
++ First way( need install tsc to your local/NO need install tsc to your local )
+    tsc index.ts (npx tsc index.ts)
     node index.js
-+ Second way
-    ts-node index.ts
++ Second way( need install ts-node to your local/NO need install ts-node to your local )
+    ts-node index.ts npx ts-node index.ts
  */
 
 /*
