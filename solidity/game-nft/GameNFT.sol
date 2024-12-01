@@ -2,9 +2,10 @@
 pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
+import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
-contract GameNFT is ERC721, Ownable {
+contract GameNFT is ERC721, ReentrancyGuard, Ownable {
     uint256 private _nextTokenId = 1;
     uint256 public constant MINT_PRICE = 0.01 ether;
 
@@ -25,7 +26,7 @@ contract GameNFT is ERC721, Ownable {
 
     constructor() ERC721("Game Character", "GCHAR") {}
 
-    function mintCharacter(string calldata name) external payable returns (uint256) {
+    function mintCharacter(string calldata name) external payable nonReentrant returns (uint256) {
         require(msg.value >= MINT_PRICE, "Insufficient payment");
         require(bytes(name).length > 0, "Name required");
 
@@ -49,17 +50,20 @@ contract GameNFT is ERC721, Ownable {
         emit CharacterListed(tokenId, price);
     }
 
-    function buyCharacter(uint256 tokenId) external payable {
+    function buyCharacter(uint256 tokenId) external payable nonReentrant {
         Character storage character = characters[tokenId];
         address seller = ownerOf(tokenId);
+        uint256 price = character.price;
 
         require(character.isForSale, "Not for sale");
-        require(msg.value >= character.price, "Low payment");
+        require(msg.value >= price, "Low payment");
         require(seller != msg.sender, "Can't self buy");
 
+        // Update state before external calls
         character.isForSale = false;
         character.price = 0;
 
+        // Transfer NFT and payment
         _transfer(seller, msg.sender, tokenId);
         payable(seller).transfer(msg.value);
 
@@ -78,7 +82,9 @@ contract GameNFT is ERC721, Ownable {
         emit CharacterLevelUp(tokenId, character.level);
     }
 
-    function withdraw() external onlyOwner {
-        payable(owner()).transfer(address(this).balance);
+    function withdraw() external nonReentrant onlyOwner {
+        uint256 balance = address(this).balance;
+        require(balance > 0, "No balance");
+        payable(owner()).transfer(balance);
     }
 }
