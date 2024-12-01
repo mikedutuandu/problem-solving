@@ -8,7 +8,7 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 // Simple game token
 contract GameToken is ERC20, Ownable {
     constructor() ERC20("Game Token", "GTK") {
-        _mint(msg.sender, 1000000 * 10**decimals());
+        _mint(msg.sender, 1000000 * 10**18);
     }
 
     function mint(address to, uint256 amount) external onlyOwner {
