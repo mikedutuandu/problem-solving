@@ -2,12 +2,11 @@
 pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
-import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
-contract GameNFT is ERC721, ReentrancyGuard, Ownable {
+contract GameNFT is ERC721, Ownable {
     uint256 private _nextTokenId = 1;
-    uint256 public constant MINT_PRICE = 0.01 ether;  // Made constant
+    uint256 public constant MINT_PRICE = 0.01 ether;
 
     struct Character {
         string name;
@@ -19,30 +18,30 @@ contract GameNFT is ERC721, ReentrancyGuard, Ownable {
 
     mapping(uint256 => Character) public characters;
 
-    event CharacterMinted(uint256 indexed tokenId, string name, uint8 level, uint8 power);
+    event CharacterMinted(uint256 indexed tokenId, string name);
     event CharacterListed(uint256 indexed tokenId, uint256 price);
     event CharacterSold(uint256 indexed tokenId, address from, address to, uint256 price);
-    event CharacterUnlisted(uint256 indexed tokenId);  // Added event
-    event CharacterLevelUp(uint256 indexed tokenId, uint8 newLevel, uint8 newPower);  // Added event
+    event CharacterLevelUp(uint256 indexed tokenId, uint8 newLevel);
 
     constructor() ERC721("Game Character", "GCHAR") {}
 
-    function mintCharacter(string calldata name, uint8 level, uint8 power) external payable returns (uint256) {
+    function mintCharacter(string calldata name) external payable returns (uint256) {
         require(msg.value >= MINT_PRICE, "Insufficient payment");
-        require(bytes(name).length > 0, "Name cannot be empty");  // Added validation
+        require(bytes(name).length > 0, "Name required");
 
         uint256 tokenId = _nextTokenId++;
-
         _safeMint(msg.sender, tokenId);
-        characters[tokenId] = Character(name, level, power, false, 0);
 
-        emit CharacterMinted(tokenId, name, level, power);
+        // Start at level 1 with power 10
+        characters[tokenId] = Character(name, 1, 10, false, 0);
+
+        emit CharacterMinted(tokenId, name);
         return tokenId;
     }
 
     function listCharacter(uint256 tokenId, uint256 price) external {
-        require(ownerOf(tokenId) == msg.sender, "Not the owner");
-        require(price > 0, "Price must be positive");
+        require(ownerOf(tokenId) == msg.sender, "Not owner");
+        require(price > 0, "Invalid price");
 
         characters[tokenId].isForSale = true;
         characters[tokenId].price = price;
@@ -50,52 +49,36 @@ contract GameNFT is ERC721, ReentrancyGuard, Ownable {
         emit CharacterListed(tokenId, price);
     }
 
-    function buyCharacter(uint256 tokenId) external payable nonReentrant {
+    function buyCharacter(uint256 tokenId) external payable {
         Character storage character = characters[tokenId];
-        require(character.isForSale, "Not for sale");
-        require(msg.value >= character.price, "Insufficient payment");
-
         address seller = ownerOf(tokenId);
-        require(seller != msg.sender, "Can't buy your own character");
+
+        require(character.isForSale, "Not for sale");
+        require(msg.value >= character.price, "Low payment");
+        require(seller != msg.sender, "Can't self buy");
 
         character.isForSale = false;
         character.price = 0;
 
         _transfer(seller, msg.sender, tokenId);
-        payable(seller).transfer(msg.value);  // Consider using pull pattern for large scale
+        payable(seller).transfer(msg.value);
 
         emit CharacterSold(tokenId, seller, msg.sender, msg.value);
     }
 
-    function cancelListing(uint256 tokenId) external {
-        require(ownerOf(tokenId) == msg.sender, "Not the owner");
-        require(characters[tokenId].isForSale, "Not listed");  // Added check
-
-        characters[tokenId].isForSale = false;
-        characters[tokenId].price = 0;
-
-        emit CharacterUnlisted(tokenId);
-    }
-
     function levelUp(uint256 tokenId) external {
-        require(ownerOf(tokenId) == msg.sender, "Not the owner");
+        require(ownerOf(tokenId) == msg.sender, "Not owner");
 
         Character storage character = characters[tokenId];
-        require(character.level < 100, "Max level reached");  // Added max level
+        require(character.level < 100, "Max level");
 
-        character.level += 1;
+        character.level++;
         character.power += 5;
 
-        emit CharacterLevelUp(tokenId, character.level, character.power);
-    }
-
-    function getCharacter(uint256 tokenId) external view returns (Character memory) {
-        return characters[tokenId];
+        emit CharacterLevelUp(tokenId, character.level);
     }
 
     function withdraw() external onlyOwner {
-        uint256 balance = address(this).balance;
-        require(balance > 0, "No balance to withdraw");  // Added check
-        payable(owner()).transfer(balance);
+        payable(owner()).transfer(address(this).balance);
     }
 }
