@@ -4,15 +4,14 @@
 /*
 A. Flow sign a signature and verify it: https://solidity-by-example.org/signature/
 ### Creating sigHash and Signature (Frontend/Off-chain):
+    1. Create the same hash that contract will create
+    const messageHash = ethers.utils.solidityKeccak256(
+        ['address', 'uint256'],
+        [userAddress, amount]
+    );
 
-/ 1. Create the same hash that contract will create
-const messageHash = ethers.utils.solidityKeccak256(
-    ['address', 'uint256'],
-    [userAddress, amount]
-);
-
-// 2. Sign this hash with private key - this creates a unique signature
-const signature = await signer.signMessage(ethers.utils.arrayify(messageHash));
+    2. Sign this hash with private key - this creates a unique signature
+    const signature = await signer.signMessage(ethers.utils.arrayify(messageHash));
 
 
 ### Verifying in Contract (On-chain):
