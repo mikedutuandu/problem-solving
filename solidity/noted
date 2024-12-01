@@ -40,3 +40,26 @@ Contract uses that signature to figure out who signed
 Checks if that signer is the owner
 
 4. The default variable visibility in Solidity is internal. The default function visibility in Solidity is public.
+
+5. one ether is equal to 10^18 wei.
+
+6. gas
+- gas limit (max amount of gas you're willing to use for your transaction, set by you)
+- gas price is how much ether you are willing to pay per gas
+- Giả sử khi giao dịch, Gas Limit Ethereum là 21,000 và Gas Price là 106 Gwei. Như vậy:
+  Gas Fee = 21,000 x 106 Gwei = 2,226,000 Gwei ~ 0,002226 ETH
+
+7. In Solidity, there are three main data locations:
+
+   + storage - permanent storage on blockchain (like a hard drive)
+   + memory - temporary storage that lasts only during function execution (like RAM)
+   + calldata - special read-only memory for function parameters
+
+   + sample:
+       function getTracking() public view returns(Size[] memory){
+           return trackingSetSize;
+       }
+   + explain:
+       So while the trackingSetSize array itself is stored in storage,
+       when we return it in a function, we need to specify that we're returning a memory copy of that storage array.
+       This is a requirement in Solidity for all reference types (arrays, structs, strings, etc.) in function returns.
