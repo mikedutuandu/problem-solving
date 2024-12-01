@@ -11,11 +11,11 @@ Algorithms
 B. =============
 
 1. Blockchain: Solidity(token - NFT) , Web3.js/Ethers.js
-	+ Find out API the wallet code of videonft, WebSocket listen event
-	+ Deploy to testnet bsc
+	+ Find out API the wallet code of videonft, WebSocket listen event : DONE
+	+ Deploy to testnet bsc : DONE
 	+ Migration a new version to hardhat
-	+ Find out FE code
-	+ Fix the bug make it working with testnet
+	+ Find out FE code : DONE
+	+ Fix the bug make it working with testnet : DONE
 
 	+ Feathers.js, WebSocket
 	+ MongoDB, Redis: 
@@ -32,17 +32,18 @@ B. =============
 
 C. =============
 1. Solidity:
-    https://docs.soliditylang.org/en/v0.8.28/structure-of-a-contract.html
+    https://docs.soliditylang.org/en/v0.8.28/structure-of-a-contract.html : DONE
 
-    https://solidity-by-example.org/hello-world/
+    https://solidity-by-example.org/hello-world/ : DONE
 
-    https://www.tutorialspoint.com/solidity/solidity_assembly.htm
+    https://www.tutorialspoint.com/solidity/solidity_assembly.htm : DONE
 
 2. TransparentUpgradeableProxy vs UUPSUpgradeable: https://docs.openzeppelin.com/contracts/5.x/api/prox
 
 3. Deployment
 	+ By hardhat-ethers hardhat plugin
 	+ By Hardhat ignition
-	+ Migration to Hardhat ignition: 
+
+
 D. ===============
 Practice exam solidity and javascript
