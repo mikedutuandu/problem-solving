@@ -71,7 +71,16 @@ contract TokenVault is Ownable {
             v := byte(0, calldataload(add(signature.offset, 64)))
         }
 
+        /*
+        User wants to withdraw their tokens
+        User must ask the owner to sign their withdrawal request
+        Owner must sign it
+        User can then submit the withdrawal with owner's signature
+        */
         require(ecrecover(ethSignedHash, v, r, s) == owner(), "Invalid signature");
+
+        // Verify the signer is the same as msg.sender (the withdrawer)
+        // require(ecrecover(ethSignedHash, v, r, s) == msg.sender, "Invalid signature");
         return ethSignedHash;
     }
 
