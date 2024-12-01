@@ -1,41 +1,42 @@
-A. ============
-Algorithms
+1. Demo practice run it by https://remix.ethereum.org/
 
-B. =============
+2. Demo practice run it by hardhat
 
-1. Blockchain: Solidity(token - NFT) , Web3.js/Ethers.js
-	+ Find out API the wallet code of videonft, WebSocket listen event
-	+ Deploy to testnet bsc
-	+ Migration a new version to hardhat
-	+ Find out FE code
-	+ Fix the bug make it working with testnet
+3. Flow sign a signature and verify it: https://solidity-by-example.org/signature/
+### Creating sigHash and Signature (Frontend/Off-chain):
 
-	+ Feathers.js, WebSocket
-	+ MongoDB, Redis: 
-		+ Optimize database queries and manage data across MongoDB and Redis 
-		+ https://www.mongodb.com/resources/compare/mongodb-dynamodb
-		+ Feathers.js with mongodb and Redis as hook cache on GET api to improve performance 
+/ 1. Create the same hash that contract will create
+const messageHash = ethers.utils.solidityKeccak256(
+    ['address', 'uint256'],
+    [userAddress, amount]
+);
+
+// 2. Sign this hash with private key - this creates a unique signature
+const signature = await signer.signMessage(ethers.utils.arrayify(messageHash));
 
 
-3. Privy or similar Web3 auth solutions, Web3 authentication systems and wallet integrations
+### Verifying in Contract (On-chain):
+function withdraw(uint256 amount, bytes calldata signature) {
+    // 1. Recreate the same hash
+    bytes32 sigHash = keccak256(abi.encodePacked(msg.sender, amount));
 
-4  Blockchain indexing and event tracking(blockchain event listeners and webhooks)
+    // 2. Verify signature - this recovers the signer's address from signature
+    address recoveredSigner = ecrecover(sigHash, v, r, s);
 
-5. Token-gated applications, ENS, IPFS
+    // 3. Check if recovered signer is the owner
+    require(recoveredSigner == owner(), "Invalid signature");
+}
+The key points:
 
-C. =============
-1. Solidity:
-    https://docs.soliditylang.org/en/v0.8.28/structure-of-a-contract.html
+We're not comparing hash with signature
+The signature is used to recover who signed the message
+We verify if the recovered signer is the owner
+ecrecover gets the address that created the signature
 
-    https://solidity-by-example.org/hello-world/
+It's like:
 
-    https://www.tutorialspoint.com/solidity/solidity_assembly.htm
+Owner signs a message (creates signature)
+Contract uses that signature to figure out who signed
+Checks if that signer is the owner
 
-2. TransparentUpgradeableProxy vs UUPSUpgradeable: https://docs.openzeppelin.com/contracts/5.x/api/prox
-
-3. Deployment
-	+ By hardhat-ethers hardhat plugin
-	+ By Hardhat ignition
-	+ Migration to Hardhat ignition: 
-D. ===============
-Practice exam solidity and javascript
+4. The default variable visibility in Solidity is internal. The default function visibility in Solidity is public.
