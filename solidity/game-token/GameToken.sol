@@ -2,7 +2,6 @@
 pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
-import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
 // Simple game token
@@ -16,14 +15,13 @@ contract GameToken is ERC20, Ownable {
     }
 }
 
-// Simple vault for deposits and withdrawals
-contract TokenVault is ReentrancyGuard, Ownable {
-    GameToken public immutable token;  // Made immutable
-    uint256 public constant MAX_WITHDRAW = 1000 * 10**18;  // Made constant
-    uint256 public constant COOLDOWN = 1 hours;  // Reduced and made constant
+// Simplified vault for deposits and withdrawals
+contract TokenVault is Ownable {
+    GameToken public immutable token;
+    uint256 public constant MAX_WITHDRAW = 1000 * 10**18;
 
-    mapping(address => uint256) public lastWithdrawTime;
-    mapping(bytes32 => bool) public usedSignatures;  // Renamed for clarity
+    mapping(address => uint256) public balances;
+    mapping(bytes32 => bool) public usedSignatures;
 
     event Deposited(address indexed user, uint256 amount);
     event Withdrawn(address indexed user, uint256 amount);
@@ -32,47 +30,37 @@ contract TokenVault is ReentrancyGuard, Ownable {
         token = GameToken(_token);
     }
 
-    // Deposit tokens
-    function deposit(uint256 amount) external nonReentrant {
+    function deposit(uint256 amount) external {
         require(amount > 0, "Zero amount");
         require(token.transferFrom(msg.sender, address(this), amount), "Transfer failed");
+        balances[msg.sender] += amount;
         emit Deposited(msg.sender, amount);
     }
 
-    // Withdraw with signature
-    function withdraw(uint256 amount, bytes calldata signature) external nonReentrant {
+    function withdraw(uint256 amount, bytes calldata signature) external {
         require(amount <= MAX_WITHDRAW, "Exceeds max");
-        require(block.timestamp >= lastWithdrawTime[msg.sender] + COOLDOWN, "Too soon");
+        require(balances[msg.sender] >= amount, "Insufficient balance");
 
-        // Get the hash and verify signature
         bytes32 ethSignedHash = verify(msg.sender, amount, signature);
-
-        // Save withdrawal state
         usedSignatures[ethSignedHash] = true;
-        lastWithdrawTime[msg.sender] = block.timestamp;
 
+        balances[msg.sender] -= amount;
         require(token.transfer(msg.sender, amount), "Transfer failed");
         emit Withdrawn(msg.sender, amount);
     }
 
-    // Handle all signature verification logic
     function verify(
         address sender,
         uint256 amount,
         bytes calldata signature
     ) public view returns (bytes32) {
-        // Create hash from input params
         bytes32 messageHash = keccak256(abi.encodePacked(sender, amount));
-
-        // Create Ethereum signed message hash
         bytes32 ethSignedHash = keccak256(
             abi.encodePacked("\x19Ethereum Signed Message:\n32", messageHash)
         );
 
-        // Check if signature was used
         require(!usedSignatures[ethSignedHash], "Used signature");
 
-        // Extract signature components
         bytes32 r;
         bytes32 s;
         uint8 v;
@@ -83,14 +71,12 @@ contract TokenVault is ReentrancyGuard, Ownable {
             v := byte(0, calldataload(add(signature.offset, 64)))
         }
 
-        // Verify signer is owner
         require(ecrecover(ethSignedHash, v, r, s) == owner(), "Invalid signature");
-
         return ethSignedHash;
     }
 
-    // Emergency withdraw
     function emergencyWithdraw() external onlyOwner {
-        require(token.transfer(owner(), token.balanceOf(address(this))));
+        uint256 balance = token.balanceOf(address(this));
+        require(token.transfer(owner(), balance), "Transfer failed");
     }
 }
