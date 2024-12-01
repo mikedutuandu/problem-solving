@@ -24,7 +24,7 @@ contract GameNFT is ERC721, ReentrancyGuard, Ownable {
     event CharacterSold(uint256 indexed tokenId, address from, address to, uint256 price);
     event CharacterLevelUp(uint256 indexed tokenId, uint8 newLevel);
 
-    constructor() ERC721("Game Character", "GCHAR") {}
+    constructor() ERC721("Game Character", "GCHAR") Ownable(msg.sender) {}
 
     function mintCharacter(string calldata name) external payable nonReentrant returns (uint256) {
         require(msg.value >= MINT_PRICE, "Insufficient payment");
