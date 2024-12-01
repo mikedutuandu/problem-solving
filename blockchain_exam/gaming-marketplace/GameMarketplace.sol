@@ -21,7 +21,6 @@ contract GameMarketplace is ERC721, ReentrancyGuard {
 
     constructor() ERC721("Game Items", "GITM") {}
 
-    // Core functions
     function createItem(string memory name, uint8 itemType, uint256 power) external returns (uint256) {
         _tokenIds++;
         _safeMint(msg.sender, _tokenIds);
@@ -48,4 +47,3 @@ contract GameMarketplace is ERC721, ReentrancyGuard {
         emit ItemSold(tokenId, seller, msg.sender, msg.value);
     }
 }
-
