@@ -44,23 +44,35 @@ contract TokenVault is ReentrancyGuard, Ownable {
         require(amount <= MAX_WITHDRAW, "Exceeds max");
         require(block.timestamp >= lastWithdrawTime[msg.sender] + COOLDOWN, "Too soon");
 
-        bytes32 sigHash = keccak256(abi.encodePacked(msg.sender, amount));
-        require(!usedSignatures[sigHash], "Used signature");
-        require(verify(sigHash, signature), "Invalid signature");
+        // Get the hash and verify signature
+        bytes32 ethSignedHash = verify(msg.sender, amount, signature);
 
-        usedSignatures[sigHash] = true;
+        // Save withdrawal state
+        usedSignatures[ethSignedHash] = true;
         lastWithdrawTime[msg.sender] = block.timestamp;
 
         require(token.transfer(msg.sender, amount), "Transfer failed");
         emit Withdrawn(msg.sender, amount);
     }
 
-    // Verify signature
-    function verify(bytes32 hash, bytes calldata signature) public view returns (bool) {
-        bytes32 messageHash = keccak256(
-            abi.encodePacked("\x19Ethereum Signed Message:\n32", hash)
+    // Handle all signature verification logic
+    function verify(
+        address sender,
+        uint256 amount,
+        bytes calldata signature
+    ) public view returns (bytes32) {
+        // Create hash from input params
+        bytes32 messageHash = keccak256(abi.encodePacked(sender, amount));
+
+        // Create Ethereum signed message hash
+        bytes32 ethSignedHash = keccak256(
+            abi.encodePacked("\x19Ethereum Signed Message:\n32", messageHash)
         );
 
+        // Check if signature was used
+        require(!usedSignatures[ethSignedHash], "Used signature");
+
+        // Extract signature components
         bytes32 r;
         bytes32 s;
         uint8 v;
@@ -71,7 +83,10 @@ contract TokenVault is ReentrancyGuard, Ownable {
             v := byte(0, calldataload(add(signature.offset, 64)))
         }
 
-        return ecrecover(messageHash, v, r, s) == owner();
+        // Verify signer is owner
+        require(ecrecover(ethSignedHash, v, r, s) == owner(), "Invalid signature");
+
+        return ethSignedHash;
     }
 
     // Emergency withdraw
