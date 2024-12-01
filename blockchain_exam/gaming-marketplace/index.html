@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Game Marketplace</title>
+    <script src="https://cdn.ethers.io/lib/ethers-5.7.0.umd.min.js"></script>
+</head>
+<body>
+    <h2>Game Marketplace</h2>
+
+    <div>
+        <h3>Create Item</h3>
+        <input id="itemName" placeholder="Item name">
+        <select id="itemType">
+            <option value="0">Weapon</option>
+            <option value="1">Armor</option>
+        </select>
+        <input id="power" type="number" placeholder="Power">
+        <button onclick="createItem()">Create</button>
+    </div>
+
+    <div>
+        <h3>List Item</h3>
+        <input id="listTokenId" placeholder="Token ID">
+        <input id="listPrice" placeholder="Price in ETH">
+        <button onclick="listItem()">List</button>
+    </div>
+
+    <div>
+        <h3>Buy Item</h3>
+        <input id="buyTokenId" placeholder="Token ID">
+        <button onclick="buyItem()">Buy</button>
+    </div>
+
+    <script>
+        let marketplace;
+
+        async function init() {
+            const provider = new ethers.providers.Web3Provider(window.ethereum);
+            marketplace = new GameMarketplace('YOUR_CONTRACT_ADDRESS', provider);
+            await marketplace.connect();
+        }
+
+        async function createItem() {
+            const name = document.getElementById('itemName').value;
+            const type = document.getElementById('itemType').value;
+            const power = document.getElementById('power').value;
+            const tokenId = await marketplace.createItem(name, type, power);
+            alert(`Created item with ID: ${tokenId}`);
+        }
+
+        async function listItem() {
+            const tokenId = document.getElementById('listTokenId').value;
+            const price = document.getElementById('listPrice').value;
+            await marketplace.listItem(tokenId, price);
+            alert('Item listed!');
+        }
+
+        async function buyItem() {
+            const tokenId = document.getElementById('buyTokenId').value;
+            const price = document.getElementById('listPrice').value;
+            await marketplace.buyItem(tokenId, price);
+            alert('Item purchased!');
+        }
+
+        init();
+    </script>
+</body>
+</html>

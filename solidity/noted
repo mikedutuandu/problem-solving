@@ -24,7 +24,12 @@ B. =============
 5. Token-gated applications, ENS, IPFS
 
 C. =============
-1. Solidity: https://docs.soliditylang.org/en/v0.8.28/structure-of-a-contract.html
+1. Solidity:
+    https://docs.soliditylang.org/en/v0.8.28/structure-of-a-contract.html
+
+    https://solidity-by-example.org/hello-world/
+
+    https://www.tutorialspoint.com/solidity/solidity_assembly.htm
 
 2. TransparentUpgradeableProxy vs UUPSUpgradeable: https://docs.openzeppelin.com/contracts/5.x/api/prox
 
@@ -32,5 +37,5 @@ C. =============
 	+ By hardhat-ethers hardhat plugin
 	+ By Hardhat ignition
 	+ Migration to Hardhat ignition: 
-
-
+D. ===============
+Practice exam solidity and javascript
