@@ -2,9 +2,9 @@
 pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
+import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
-// Simple game token
 contract GameToken is ERC20, Ownable {
     constructor() ERC20("Game Token", "GTK") {
         _mint(msg.sender, 1000000 * 10**18);
@@ -15,8 +15,7 @@ contract GameToken is ERC20, Ownable {
     }
 }
 
-// Simplified vault for deposits and withdrawals
-contract TokenVault is Ownable {
+contract TokenVault is ReentrancyGuard, Ownable {
     GameToken public immutable token;
     uint256 public constant MAX_WITHDRAW = 1000 * 10**18;
 
@@ -30,22 +29,24 @@ contract TokenVault is Ownable {
         token = GameToken(_token);
     }
 
-    function deposit(uint256 amount) external {
+    function deposit(uint256 amount) external nonReentrant {
         require(amount > 0, "Zero amount");
         require(token.transferFrom(msg.sender, address(this), amount), "Transfer failed");
         balances[msg.sender] += amount;
         emit Deposited(msg.sender, amount);
     }
 
-    function withdraw(uint256 amount, bytes calldata signature) external {
+    function withdraw(uint256 amount, bytes calldata signature) external nonReentrant {
         require(amount <= MAX_WITHDRAW, "Exceeds max");
         require(balances[msg.sender] >= amount, "Insufficient balance");
 
         bytes32 ethSignedHash = verify(msg.sender, amount, signature);
         usedSignatures[ethSignedHash] = true;
 
+        // Update balance before transfer to prevent reentrancy
         balances[msg.sender] -= amount;
         require(token.transfer(msg.sender, amount), "Transfer failed");
+
         emit Withdrawn(msg.sender, amount);
     }
 
@@ -71,20 +72,21 @@ contract TokenVault is Ownable {
             v := byte(0, calldataload(add(signature.offset, 64)))
         }
 
-        /*
-        User wants to withdraw their tokens
-        User must ask the owner to sign their withdrawal request
-        Owner must sign it
-        User can then submit the withdrawal with owner's signature
-        */
+        // Choices for signature verification:
+        // User wants to withdraw their tokens
+        // User must ask the owner to sign their withdrawal request
+        // Owner must sign it
+        // User can then submit the withdrawal with owner's signature
+        // 1. Owner must sign (centralized but controlled) - current implementation
         require(ecrecover(ethSignedHash, v, r, s) == owner(), "Invalid signature");
 
-        // Verify the signer is the same as msg.sender (the withdrawer)
+        // 2. User self-signs (decentralized) - alternative implementation
         // require(ecrecover(ethSignedHash, v, r, s) == msg.sender, "Invalid signature");
+
         return ethSignedHash;
     }
 
-    function emergencyWithdraw() external onlyOwner {
+    function emergencyWithdraw() external nonReentrant onlyOwner {
         uint256 balance = token.balanceOf(address(this));
         require(token.transfer(owner(), balance), "Transfer failed");
     }
