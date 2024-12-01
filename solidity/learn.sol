@@ -62,6 +62,14 @@ E. In Solidity, there are three main data locations:
        So while the trackingSetSize array itself is stored in storage,
        when we return it in a function, we need to specify that we're returning a memory copy of that storage array.
        This is a requirement in Solidity for all reference types (arrays, structs, strings, etc.) in function returns.
+
+F. initialize parent contract with parameters.
+
+contract C is X, Y {
+    // Pass the parameters here in the constructor,
+    // similar to function modifiers.
+    constructor(string memory _name, string memory _text) X(_name) Y(_text) {}
+}
 */
 
 
