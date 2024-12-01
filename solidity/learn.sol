@@ -1,5 +1,72 @@
 // SPDX-License-Identifier: GPL-3.0
 
+
+/*
+A. Flow sign a signature and verify it: https://solidity-by-example.org/signature/
+### Creating sigHash and Signature (Frontend/Off-chain):
+
+/ 1. Create the same hash that contract will create
+const messageHash = ethers.utils.solidityKeccak256(
+    ['address', 'uint256'],
+    [userAddress, amount]
+);
+
+// 2. Sign this hash with private key - this creates a unique signature
+const signature = await signer.signMessage(ethers.utils.arrayify(messageHash));
+
+
+### Verifying in Contract (On-chain):
+function withdraw(uint256 amount, bytes calldata signature) {
+    // 1. Recreate the same hash
+    bytes32 sigHash = keccak256(abi.encodePacked(msg.sender, amount));
+
+    // 2. Verify signature - this recovers the signer's address from signature
+    address recoveredSigner = ecrecover(sigHash, v, r, s);
+
+    // 3. Check if recovered signer is the owner
+    require(recoveredSigner == owner(), "Invalid signature");
+}
+The key points:
+
+We're not comparing hash with signature
+The signature is used to recover who signed the message
+We verify if the recovered signer is the owner
+ecrecover gets the address that created the signature
+
+It's like:
+
+Owner signs a message (creates signature)
+Contract uses that signature to figure out who signed
+Checks if that signer is the owner
+
+B. The default variable visibility in Solidity is internal. The default function visibility in Solidity is public.
+
+C. one ether is equal to 10^18 wei.
+
+D. gas
+- gas limit (max amount of gas you're willing to use for your transaction, set by you)
+- gas price is how much ether you are willing to pay per gas
+- Giả sử khi giao dịch, Gas Limit Ethereum là 21,000 và Gas Price là 106 Gwei. Như vậy:
+  Gas Fee = 21,000 x 106 Gwei = 2,226,000 Gwei ~ 0,002226 ETH
+
+E. In Solidity, there are three main data locations:
+
+   + storage - permanent storage on blockchain (like a hard drive)
+   + memory - temporary storage that lasts only during function execution (like RAM)
+   + calldata - special read-only memory for function parameters
+
+   + sample:
+       function getTracking() public view returns(Size[] memory){
+           return trackingSetSize;
+       }
+   + explain:
+       So while the trackingSetSize array itself is stored in storage,
+       when we return it in a function, we need to specify that we're returning a memory copy of that storage array.
+       This is a requirement in Solidity for all reference types (arrays, structs, strings, etc.) in function returns.
+*/
+
+
+
 pragma solidity >=0.8.2 <0.9.0;
 
 interface Human {
@@ -204,6 +271,4 @@ contract MTest is Owner {
 
         return (car.owner(), car.model(), car.carAddr(), address(car).balance);
     }
-
-
 }
