@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Token Vault</title>
+    <script src="https://cdn.ethers.io/lib/ethers-5.7.2.umd.min.js"></script>
+    <style>
+        .container {
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 20px;
+            font-family: Arial, sans-serif;
+        }
+        .section {
+            margin: 20px 0;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        button {
+            padding: 8px 16px;
+            margin: 5px;
+            cursor: pointer;
+        }
+        input {
+            padding: 8px;
+            margin: 5px;
+            width: 200px;
+        }
+        #status {
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Token Vault</h1>
+
+    <!-- Connection Section -->
+    <div class="section">
+        <button onclick="connect()">Connect</button>
+        <div id="status"></div>
+    </div>
+
+    <!-- Deposit Section -->
+    <div class="section">
+        <h3>Deposit Tokens</h3>
+        <input type="number" id="depositAmount" placeholder="Amount to deposit">
+        <button onclick="deposit()">Deposit</button>
+    </div>
+
+    <!-- Withdraw Section -->
+    <div class="section">
+        <h3>Withdraw Tokens</h3>
+        <input type="number" id="withdrawAmount" placeholder="Amount to withdraw">
+        <button onclick="getSignature()">1. Get Signature</button>
+        <button onclick="withdraw()">2. Withdraw</button>
+        <div id="signature"></div>
+    </div>
+
+    <!-- Balance Section -->
+    <div class="section">
+        <h3>Balances</h3>
+        <button onclick="refreshBalances()">Refresh Balances</button>
+        <div id="balances"></div>
+    </div>
+</div>
+
+<script>
+    let vaultContract;
+    let tokenContract;
+    let currentSignature;
+    let userAddress;
+
+    const VAULT_ADDRESS = 'YOUR_VAULT_CONTRACT_ADDRESS';
+    const TOKEN_ADDRESS = 'YOUR_TOKEN_CONTRACT_ADDRESS';
+
+    const VAULT_ABI = [
+        "function deposit(uint256 amount) external",
+        "function withdraw(uint256 amount, bytes calldata signature) external",
+        "function lastWithdrawTime(address) external view returns (uint256)"
+    ];
+
+    const TOKEN_ABI = [
+        "function approve(address spender, uint256 amount) external returns (bool)",
+        "function balanceOf(address account) external view returns (uint256)"
+    ];
+
+    async function connect() {
+        try {
+            // In Remix, we can use web3 directly
+            const accounts = await web3.eth.getAccounts();
+            const currentAccount = accounts[0];
+
+            document.getElementById('status').innerHTML =
+                'Connected: ' + currentAccount;
+        } catch (error) {
+            document.getElementById('status').innerHTML =
+                'Error: ' + error.message;
+        }
+    }
+
+    async function deposit() {
+        try {
+            const amount = ethers.utils.parseEther(document.getElementById('depositAmount').value);
+
+            // First approve
+            const approveTx = await tokenContract.approve(VAULT_ADDRESS, amount);
+            await approveTx.wait();
+
+            // Then deposit
+            const tx = await vaultContract.deposit(amount);
+            await tx.wait();
+
+            updateStatus('Deposit successful!', 'success');
+            await refreshBalances();
+        } catch (error) {
+            updateStatus('Deposit failed: ' + error.message, 'error');
+        }
+    }
+
+    async function getSignature() {
+        try {
+            const amount = document.getElementById('withdrawAmount').value;
+            const amountWei = ethers.utils.parseEther(amount);
+
+            // Create message hash
+            const messageHash = ethers.utils.solidityKeccak256(
+                ['address', 'uint256'],
+                [userAddress, amountWei]
+            );
+
+            // Get signer
+            const provider = new ethers.providers.Web3Provider(window.ethereum);
+            const signer = provider.getSigner();
+
+            // Sign message
+            currentSignature = await signer.signMessage(ethers.utils.arrayify(messageHash));
+
+            document.getElementById('signature').innerHTML =
+                `Signature created: ${currentSignature.substring(0, 20)}...`;
+        } catch (error) {
+            updateStatus('Signature creation failed: ' + error.message, 'error');
+        }
+    }
+
+    async function withdraw() {
+        try {
+            if (!currentSignature) {
+                throw new Error('Please get signature first');
+            }
+
+            const amount = ethers.utils.parseEther(document.getElementById('withdrawAmount').value);
+            const tx = await vaultContract.withdraw(amount, currentSignature);
+            await tx.wait();
+
+            updateStatus('Withdrawal successful!', 'success');
+            await refreshBalances();
+        } catch (error) {
+            updateStatus('Withdrawal failed: ' + error.message, 'error');
+        }
+    }
+
+    async function refreshBalances() {
+        if (!userAddress) return;
+
+        const tokenBalance = await tokenContract.balanceOf(userAddress);
+        const vaultBalance = await tokenContract.balanceOf(VAULT_ADDRESS);
+        const lastWithdraw = await vaultContract.lastWithdrawTime(userAddress);
+
+        document.getElementById('balances').innerHTML = `
+                Your Token Balance: ${ethers.utils.formatEther(tokenBalance)} GTK<br>
+                Vault Balance: ${ethers.utils.formatEther(vaultBalance)} GTK<br>
+                Last Withdrawal: ${new Date(lastWithdraw.toNumber() * 1000).toLocaleString()}
+            `;
+    }
+
+    function updateStatus(message, type) {
+        const status = document.getElementById('status');
+        status.innerHTML = message;
+        status.className = type;
+    }
+</script>
+</body>
+</html>
