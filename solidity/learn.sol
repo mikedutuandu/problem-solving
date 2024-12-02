@@ -396,8 +396,8 @@ contract MTest is Owner {
         // get the amount of Ether stored in this contract
         uint256 amount = address(this).balance;
 
-        // send all Ether to owner
-        (bool success,) = owner.call{value: amount}("");
+        // send all Ether to owner:  you can't send ETH to a non-payable address
+        (bool success,) = payable(owner).call{value: amount}("");
         require(success, "Failed to send Ether");
     }
 
