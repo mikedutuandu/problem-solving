@@ -1,52 +1,49 @@
-// SPDX-License-Identifier: GPL-3.0
-
-
 /*
 A. Flow sign a signature and verify it: https://solidity-by-example.org/signature/
-### Creating sigHash and Signature (Frontend/Off-chain):
-    1. Create the same hash that contract will create
-    const messageHash = ethers.utils.solidityKeccak256(
-        ['address', 'uint256'],
-        [userAddress, amount]
-    );
+    ### Creating sigHash and Signature (Frontend/Off-chain):
+        1. Create the same hash that contract will create
+        const messageHash = ethers.utils.solidityKeccak256(
+            ['address', 'uint256'],
+            [userAddress, amount]
+        );
 
-    2. Sign this hash with private key - this creates a unique signature
-    const signature = await signer.signMessage(ethers.utils.arrayify(messageHash));
+        2. Sign this hash with private key - this creates a unique signature
+        const signature = await signer.signMessage(ethers.utils.arrayify(messageHash));
 
 
-### Verifying in Contract (On-chain):
-function withdraw(uint256 amount, bytes calldata signature) {
-    // 1. Recreate the same hash
-    bytes32 sigHash = keccak256(abi.encodePacked(msg.sender, amount));
+    ### Verifying in Contract (On-chain):
+    function withdraw(uint256 amount, bytes calldata signature) {
+        // 1. Recreate the same hash
+        bytes32 sigHash = keccak256(abi.encodePacked(msg.sender, amount));
 
-    // 2. Verify signature - this recovers the signer's address from signature
-    address recoveredSigner = ecrecover(sigHash, v, r, s);
+        // 2. Verify signature - this recovers the signer's address from signature
+        address recoveredSigner = ecrecover(sigHash, v, r, s);
 
-    // 3. Check if recovered signer is the owner
-    require(recoveredSigner == owner(), "Invalid signature");
-}
-The key points:
+        // 3. Check if recovered signer is the owner
+        require(recoveredSigner == owner(), "Invalid signature");
+    }
+    The key points:
 
-We're not comparing hash with signature
-The signature is used to recover who signed the message
-We verify if the recovered signer is the owner
-ecrecover gets the address that created the signature
+    We're not comparing hash with signature
+    The signature is used to recover who signed the message
+    We verify if the recovered signer is the owner
+    ecrecover gets the address that created the signature
 
-It's like:
+    It's like:
 
-Owner signs a message (creates signature)
-Contract uses that signature to figure out who signed
-Checks if that signer is the owner
+    Owner signs a message (creates signature)
+    Contract uses that signature to figure out who signed
+    Checks if that signer is the owner
 
 B. The default variable visibility in Solidity is internal. The default function visibility in Solidity is public.
 
 C. one ether is equal to 10^18 wei.
 
 D. gas
-- gas limit (max amount of gas you're willing to use for your transaction, set by you)
-- gas price is how much ether you are willing to pay per gas
-- Giả sử khi giao dịch, Gas Limit Ethereum là 21,000 và Gas Price là 106 Gwei. Như vậy:
-  Gas Fee = 21,000 x 106 Gwei = 2,226,000 Gwei ~ 0,002226 ETH
+    - gas limit (max amount of gas you're willing to use for your transaction, set by you)
+    - gas price is how much ether you are willing to pay per gas
+    - Giả sử khi giao dịch, Gas Limit Ethereum là 21,000 và Gas Price là 106 Gwei. Như vậy:
+      Gas Fee = 21,000 x 106 Gwei = 2,226,000 Gwei ~ 0,002226 ETH
 
 E. In Solidity, there are three main data locations:
 
@@ -65,26 +62,58 @@ E. In Solidity, there are three main data locations:
 
 F. initialize parent contract with parameters.
 
-contract C is X, Y {
-    // Pass the parameters here in the constructor,
-    // similar to function modifiers.
-    constructor(string memory _name, string memory _text) X(_name) Y(_text) {}
-}
+    1. ===
+    contract C is X, Y {
+        // Pass the parameters here in the constructor,
+        // similar to function modifiers.
+        constructor(string memory _name, string memory _text) X(_name) Y(_text) {}
+    }
+
+    2. ===
+
+    // Option 1: Parent constructor has no parameters
+    // Child doesn't need to explicitly call parent constructor
+    contract Base {
+        constructor() {
+            // no parameters needed
+        }
+    }
+
+    contract Child is Base {
+        constructor() {
+            // Base constructor is called automatically
+        }
+    }
+
+    // Option 2: Parent constructor has parameters
+    // Child MUST call parent constructor with parameters
+    contract Base {
+        constructor(string memory name) {
+            // needs parameters
+        }
+    }
+
+    contract Child is Base {
+        constructor() Base("some name") {
+            // Must explicitly call Base constructor with parameters
+        }
+    }
+
 
 G. Immutable variables are like constants.
-Values of immutable variables can be set inside the constructor but cannot be modified afterwards.
+    Values of immutable variables can be set inside the constructor but cannot be modified afterwards.
 
-contract Immutable {
-    // coding convention to uppercase constant variables
-    address public immutable MY_ADDRESS;
-    uint256 public immutable MY_UINT;
+    contract Immutable {
+        // coding convention to uppercase constant variables
+        address public immutable MY_ADDRESS;
+        uint256 public immutable MY_UINT;
 
-    constructor(uint256 _myUint) {
-        MY_ADDRESS = msg.sender;
-        MY_UINT = _myUint;
+        constructor(uint256 _myUint) {
+            MY_ADDRESS = msg.sender;
+            MY_UINT = _myUint;
+        }
     }
-}
-*/
+ */
 
 
 

@@ -2,10 +2,12 @@
 pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
-import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
-import "@openzeppelin/contracts/access/Ownable.sol";
+//import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
+//import "@openzeppelin/contracts/access/Ownable.sol";
 
-contract GameNFT is ERC721, ReentrancyGuard, Ownable {
+import "../Base.sol";
+
+contract GameNFT is ERC721, Base {
     uint256 private _nextTokenId = 1;
     uint256 public constant MINT_PRICE = 0.01 ether;
 
@@ -24,9 +26,9 @@ contract GameNFT is ERC721, ReentrancyGuard, Ownable {
     event CharacterSold(uint256 indexed tokenId, address from, address to, uint256 price);
     event CharacterLevelUp(uint256 indexed tokenId, uint8 newLevel);
 
-    constructor() ERC721("Game Character", "GCHAR") Ownable(msg.sender) {}
+    constructor() ERC721("Game Character", "GCHAR") {}
 
-    function mintCharacter(string calldata name) external payable nonReentrant returns (uint256) {
+    function mintCharacter(string calldata name) external payable noReentrancy returns (uint256) {
         require(msg.value >= MINT_PRICE, "Insufficient payment");
         require(bytes(name).length > 0, "Name required");
 
@@ -50,7 +52,7 @@ contract GameNFT is ERC721, ReentrancyGuard, Ownable {
         emit CharacterListed(tokenId, price);
     }
 
-    function buyCharacter(uint256 tokenId) external payable nonReentrant {
+    function buyCharacter(uint256 tokenId) external payable noReentrancy {
         Character storage character = characters[tokenId];
         address seller = ownerOf(tokenId);
         uint256 price = character.price;
@@ -82,7 +84,7 @@ contract GameNFT is ERC721, ReentrancyGuard, Ownable {
         emit CharacterLevelUp(tokenId, character.level);
     }
 
-    function withdraw() external nonReentrant onlyOwner {
+    function withdraw() external noReentrancy isOwner {
         uint256 balance = address(this).balance;
         require(balance > 0, "No balance");
         payable(owner()).transfer(balance);

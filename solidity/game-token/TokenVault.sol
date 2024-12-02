@@ -3,11 +3,23 @@
 pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
-import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
-import "@openzeppelin/contracts/access/Ownable.sol";
-import "./GameToken.sol";
+//import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
+//import "@openzeppelin/contracts/access/Ownable.sol";
+import "../Base.sol";
 
-contract TokenVault is ReentrancyGuard, Ownable {
+
+
+contract GameToken is ERC20, Base {
+    constructor() ERC20("Game Token", "GTK") isOwner {
+        _mint(msg.sender, 1000000 * 10**18);
+    }
+
+    function mint(address to, uint256 amount) external isOwner {
+        _mint(to, amount);
+    }
+}
+
+contract TokenVault is Base {
     GameToken public immutable token;
     uint256 public constant MAX_WITHDRAW = 1000 * 10**18;
 
@@ -17,18 +29,18 @@ contract TokenVault is ReentrancyGuard, Ownable {
     event Deposited(address indexed user, uint256 amount);
     event Withdrawn(address indexed user, uint256 amount);
 
-    constructor(address _token) Ownable(msg.sender) {
+    constructor(address _token) {
         token = GameToken(_token);
     }
 
-    function deposit(uint256 amount) external nonReentrant {
+    function deposit(uint256 amount) external noReentrancy {
         require(amount > 0, "Zero amount");
         require(token.transferFrom(msg.sender, address(this), amount), "Transfer failed");
         balances[msg.sender] += amount;
         emit Deposited(msg.sender, amount);
     }
 
-    function withdraw(uint256 amount, bytes calldata signature) external nonReentrant {
+    function withdraw(uint256 amount, bytes calldata signature) external noReentrancy {
         require(amount <= MAX_WITHDRAW, "Exceeds max");
         require(balances[msg.sender] >= amount, "Insufficient balance");
 
@@ -78,7 +90,7 @@ contract TokenVault is ReentrancyGuard, Ownable {
         return ethSignedHash;
     }
 
-    function emergencyWithdraw() external nonReentrant onlyOwner {
+    function emergencyWithdraw() external noReentrancy isOwner {
         uint256 balance = token.balanceOf(address(this));
         require(token.transfer(owner(), balance), "Transfer failed");
     }
