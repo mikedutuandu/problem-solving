@@ -37,7 +37,7 @@ SOLUTION:
  */
 
 
-function lengthOfLastWord(s){
+function lengthOfLastWord(s: string): number{
     let count = 0
 
     // Start from the end of the string

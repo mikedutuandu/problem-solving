@@ -20,7 +20,7 @@ Check if selling at today's price would give you more profit
  */
 
 
-function maxProfit(prices) {
+function maxProfit(prices: number[]): number {
     let lowestPrice = prices[0]
 
     let largestProfit = 0

@@ -28,7 +28,7 @@ SOLUTION:
 
  */
 
-function longestCommonPrefix(strs){
+function longestCommonPrefix(strs: string[]): string{
     if(strs.length === 1){
         return strs[0]
     }

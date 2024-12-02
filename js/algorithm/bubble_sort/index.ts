@@ -8,7 +8,7 @@ With each pass through the list, the biggest items "bubble up" to the end.
 */
 
 
-function BubbleSort(arr){
+function BubbleSort(arr: number[]){
     let n = arr.length
 
     for(let i = 0; i < n-1; i++){

@@ -7,7 +7,7 @@ If the target is bigger, search the right half.
 Keep cutting the list in half until you find the target or the list is empty.
 */
 
-function binarySearch(arr, target){
+function binarySearch(arr: number[], target: number): number{
     let low = 0
     let high = arr.length
 
