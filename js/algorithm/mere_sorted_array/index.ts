@@ -34,6 +34,32 @@ Note that because m = 0, there are no elements in nums1. The 0 is only there to 
 Solution: merging the arrays from the end of both arrays
 */
 
-function merge(nums1: number[], m: number,nums2: number[], n: number): number[] {
-    return []
+function merge(nums1: number[], m: number,nums2: number[], n: number) {
+    let i = m - 1;
+    let j = n - 1;
+    let k = m+n - 1
+
+    while (i >= 0 && j >= 0){
+        if(nums1[i] > nums2[j]){
+            nums1[k] = nums1[i];
+            i--;
+        }else{
+            nums1[k] = nums2[j]
+            j--;
+        }
+        k--;
+    }
+
+    while (j>=0){
+        nums1[k] = nums2[j];
+        k--;
+        j--;
+    }
 }
+
+const nums1 = [1,2,3,0,0,0];
+const nums2 = [2,5,6];
+
+merge(nums1,3,nums2,3)
+
+console.log(nums1)
