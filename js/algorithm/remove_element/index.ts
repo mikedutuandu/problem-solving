@@ -1,5 +1,3 @@
-package main
-
 /*
 Given an integer array nums and an integer val, remove all occurrences of val in nums in-place. The order of the elements may be changed. Then return the number of elements in nums which are not equal to val.
 
@@ -43,19 +41,16 @@ It does not matter what you leave beyond the returned k (hence they are undersco
 
 */
 
-func removeElement(nums []int, val int) int {
-	k := 0
-	for i := 0; i < len(nums); i++ {
-		if nums[i] != val {
-			nums[k] = nums[i]
-			k++
-		}
-	}
-	return k
-}
 
-func main() {
-	nums1 := []int{3, 2, 2, 3}
-	removeElement(nums1, 3)
+function removeElement(nums: number[], val: number): number {
+    let k =0;
 
+    for(let i = 0; i< nums.length; i++ ){
+        if(nums[i] != val){
+            nums[k] = nums[i];
+            k++;
+        }
+    }
+
+    return k
 }
