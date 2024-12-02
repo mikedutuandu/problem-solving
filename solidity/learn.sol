@@ -47,6 +47,7 @@ D. gas
 
 E. In Solidity, there are three main data locations:
 
+   1. Locations
    + storage - permanent storage on blockchain (like a hard drive)
    + memory - temporary storage that lasts only during function execution (like RAM)
    + calldata - special read-only memory for function parameters
@@ -59,6 +60,27 @@ E. In Solidity, there are three main data locations:
        So while the trackingSetSize array itself is stored in storage,
        when we return it in a function, we need to specify that we're returning a memory copy of that storage array.
        This is a requirement in Solidity for all reference types (arrays, structs, strings, etc.) in function returns.
+
+   2. More explain storage: The storage keyword in Solidity is very similar to pointers in Go
+        + Key similarities:
+            Both allow you to modify the original data
+            Both avoid copying the entire struct
+            Both are references to the original location
+        + Main difference:
+            Go pointers point to memory locations
+            Solidity storage points to blockchain storage locations
+
+        + sample storage
+            struct Character {
+                string name;
+                uint8 level;
+            }
+
+            mapping(uint256 => Character) characters;
+
+            // Getting storage reference to modify the original
+            Character storage character = characters[tokenId];  // Get reference to storage
+            character.level++;                                 // Modifies original data
 
 F. initialize parent contract with parameters.
 
