@@ -5,7 +5,7 @@ pragma solidity ^0.8.0;
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 //import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 //import "@openzeppelin/contracts/access/Ownable.sol";
-import "../Base.sol";
+import "./Base.sol";
 
 
 
@@ -82,7 +82,7 @@ contract TokenVault is Base {
         // Owner must sign it
         // User can then submit the withdrawal with owner's signature
         // 1. Owner must sign (centralized but controlled) - current implementation
-        require(ecrecover(ethSignedHash, v, r, s) == owner(), "Invalid signature");
+        require(ecrecover(ethSignedHash, v, r, s) == owner, "Invalid signature");
 
         // 2. User self-signs (decentralized) - alternative implementation
         // require(ecrecover(ethSignedHash, v, r, s) == msg.sender, "Invalid signature");
@@ -92,7 +92,7 @@ contract TokenVault is Base {
 
     function emergencyWithdraw() external noReentrancy isOwner {
         uint256 balance = token.balanceOf(address(this));
-        require(token.transfer(owner(), balance), "Transfer failed");
+        require(token.transfer(owner, balance), "Transfer failed");
     }
 }
 

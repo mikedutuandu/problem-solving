@@ -5,7 +5,7 @@ import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 //import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 //import "@openzeppelin/contracts/access/Ownable.sol";
 
-import "../Base.sol";
+import "./Base.sol";
 
 contract GameNFT is ERC721, Base {
     uint256 private _nextTokenId = 1;
@@ -87,6 +87,6 @@ contract GameNFT is ERC721, Base {
     function withdraw() external noReentrancy isOwner {
         uint256 balance = address(this).balance;
         require(balance > 0, "No balance");
-        payable(owner()).transfer(balance);
+        payable(owner).transfer(balance);
     }
 }
