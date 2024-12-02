@@ -135,6 +135,105 @@ G. Immutable variables are like constants.
             MY_UINT = _myUint;
         }
     }
+
+J. The indexed keyword in Solidity events is optional but important for event filtering and gas efficiency.
+    + What indexed does:
+        Makes the parameter a "topic" in the event log
+        Allows you to efficiently search/filter events by this parameter
+        Stores the parameter separately in a special data structure
+    + You can have:
+        Up to 3 indexed parameters per event
+        Any number of non-indexed parameters
+
+
+    ===
+    // Event with no indexed parameters
+    event DepositNoIndex(address user, uint256 amount, string note);
+
+    // Event with same parameters but with indexed
+    event DepositWithIndex(address indexed user, uint256 indexed amount, string note);
+
+    ===
+    DepositNoIndex (No indexed):
+    {
+        // Only has event signature in topics
+        topics: [
+            "0x...event signature hash..."
+        ],
+        // All parameters are packed in data
+        data: "0x...encoded(user, amount, note)..."
+    }
+
+    ===
+    DepositWithIndex (With indexed):
+    {
+        topics: [
+            "0x...event signature hash...",
+            "0x...user address...",     // indexed user in topics[1]
+            "0x...amount in hex..."     // indexed amount in topics[2]
+        ],
+        // Only non-indexed parameters in data
+        data: "0x...encoded(note)..."
+    }
+
+    ===
+    // Using Web3.js
+
+        // 1. For events with indexed parameters - efficient
+        // Filters at blockchain level
+        contract.getPastEvents('DepositWithIndex', {
+            filter: {
+                user: '0x123...', // can filter by indexed parameters
+                amount: 100
+            },
+            fromBlock: 0,
+            toBlock: 'latest'
+        })
+        .then(events => {
+            console.log(events);
+        });
+
+        // 2. For events without indexed - inefficient
+        // Must get all events first
+        contract.getPastEvents('DepositNoIndex', {
+            fromBlock: 0,
+            toBlock: 'latest'
+        })
+        .then(events => {
+            // Filter in JavaScript after getting all events
+            const filtered = events.filter(e =>
+                e.returnValues.user === '0x123...' &&
+                e.returnValues.amount === '100'
+            );
+            console.log(filtered);
+        });
+
+     ===
+     // Using Ethers.js
+        // 1. For events with indexed parameters - efficient
+        // Create filter
+        const filter = contract.filters.DepositWithIndex(
+            '0x123...', // user (indexed)
+            100         // amount (indexed)
+        );
+
+        // Get events using filter
+        const events = await contract.queryFilter(filter);
+
+        // 2. For events without indexed - inefficient
+        // Must get all events and filter in code
+        const allEvents = await contract.queryFilter(
+            contract.filters.DepositNoIndex()
+        );
+
+        // Filter after getting all events
+        const filteredEvents = allEvents.filter(event => {
+            const args = event.args;
+            return args.user === '0x123...' &&
+                   args.amount.toString() === '100';
+        });
+
+
  */
 
 
