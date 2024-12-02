@@ -84,9 +84,28 @@ contract GameNFT is ERC721, Base {
         emit CharacterLevelUp(tokenId, character.level);
     }
 
+    // Function to withdraw all Ether from this contract.
+    // Most recommended way
+    function withdraw() public {
+        // get the amount of Ether stored in this contract
+        uint256 amount = address(this).balance;
+
+        // send all Ether to owner
+        (bool success,) = owner.call{value: amount}("");
+        require(success, "Failed to send Ether");
+    }
+
+    // Function to withdraw all Ether from this contract.
+    // Limited to 2300 gas, and problems with 2300 gas limit:
+    // + Can break when receiving contract is complex
+    // + Future Ethereum upgrades might change gas costs
+    // + Not flexible for modern DeFi interactions
+    /*
     function withdraw() external noReentrancy isOwner {
         uint256 balance = address(this).balance;
         require(balance > 0, "No balance");
         payable(owner).transfer(balance);
     }
+    */
+
 }
