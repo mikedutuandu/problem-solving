@@ -10,7 +10,7 @@ import "./Base.sol";
 
 
 contract GameToken is ERC20, Base {
-    constructor() ERC20("Game Token", "GTK") isOwner {
+    constructor() ERC20("Game Token", "GTK") {
         _mint(msg.sender, 1000000 * 10**18);
     }
 
