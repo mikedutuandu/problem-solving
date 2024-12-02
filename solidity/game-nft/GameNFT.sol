@@ -61,13 +61,20 @@ contract GameNFT is ERC721, Base {
         require(msg.value >= price, "Low payment");
         require(seller != msg.sender, "Can't self buy");
 
-        // Update state before external calls
+        // 1. Update state
         character.isForSale = false;
         character.price = 0;
 
-        // Transfer NFT and payment
+        // 2. Transfer payment first
+        (bool success,) = payable(seller).call{value: msg.value}("");
+        require(success, "ETH transfer failed");
+
+        //old way 2300 gas limit
+        //payable(seller).transfer(msg.value);
+
+        // 3. Only transfer NFT after payment success
         _transfer(seller, msg.sender, tokenId);
-        payable(seller).transfer(msg.value);
+
 
         emit CharacterSold(tokenId, seller, msg.sender, msg.value);
     }
