@@ -1,37 +1,5 @@
-1. Demo practice run it by https://remix.ethereum.org/
-
-2. Demo practice run it by hardhat
-
-++++++++++++++++++++++++++++++++++++++++++++++++
-
-
-A. ============
-Algorithms
-
-B. =============
-
-1. Blockchain: Solidity(token - NFT) , Web3.js/Ethers.js
-	+ Find out API the wallet code of videonft, WebSocket listen event : DONE
-	+ Deploy to testnet bsc : DONE
-	+ Migration a new version to hardhat
-	+ Find out FE code : DONE
-	+ Fix the bug make it working with testnet : DONE
-
-	+ Feathers.js, WebSocket
-	+ MongoDB, Redis: 
-		+ Optimize database queries and manage data across MongoDB and Redis 
-		+ https://www.mongodb.com/resources/compare/mongodb-dynamodb
-		+ Feathers.js with mongodb and Redis as hook cache on GET api to improve performance 
-
-
-3. Privy or similar Web3 auth solutions, Web3 authentication systems and wallet integrations
-
-4  Blockchain indexing and event tracking(blockchain event listeners and webhooks)
-
-5. Token-gated applications, ENS, IPFS
-
-C. =============
-1. Solidity:
+===
+1. Solidity fundamental:
     https://docs.soliditylang.org/en/v0.8.28/structure-of-a-contract.html : DONE
 
     https://solidity-by-example.org/hello-world/ : DONE
@@ -44,6 +12,7 @@ C. =============
 	+ By hardhat-ethers hardhat plugin
 	+ By Hardhat ignition
 
+===
+1. Demo practice run it by https://remix.ethereum.org/
 
-D. ===============
-Practice exam solidity and javascript
+2. Demo practice run it by hardhat

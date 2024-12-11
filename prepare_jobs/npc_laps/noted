@@ -1,0 +1,31 @@
+A. Implement BE code base with sample app cover require below
+
+    Design and implement smart contracts for gaming achievements and NFT functionality
+
+    Build and maintain backend services using TypeScript and Feathers.js
+
+    Integrate Web3 wallets and handle blockchain transactions (Privy integration experience is a plus)
+
+    Work with ENS domains and blockchain name services
+
+    Implement token-gating and blockchain-based authentication systems
+
+    Build scalable APIs that interact with multiple blockchain networks
+        +  Understanding of blockchain scaling solutions and gas optimization
+
+    Optimize database queries and manage data across MongoDB and Redis
+        + Feathers.js with mongodb and Redis as hook cache on GET api to improve performance
+
+    Handle file uploads and media processing for user-generated content
+        + AWS S3 or similar cloud storage solutions
+        + Knowledge of IPFS and decentralized storage solutions
+
+    Implement blockchain event listeners and webhooks
+
+    Real-time applications and WebSocket
+
+B. Implement FE sample app interact with BE above
+    - Web3.js/Ethers.js
+    - NextJS
+    - Tailwind
+    - Redux
