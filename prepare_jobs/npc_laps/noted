@@ -1,32 +1,36 @@
 1. Implement the a sample app as requirement below:
 
-    A. Implement BE code base with sample app cover require below
+    A. Design and implement smart contracts for gaming achievements and NFT functionality
 
-        Design and implement smart contracts for gaming achievements and NFT functionality
+    B. Implement BE code base with sample app cover require below
 
         Build and maintain backend services using TypeScript and Feathers.js
+
+        Handle file uploads and media processing for user-generated content
+              + AWS S3 or similar cloud storage solutions
+              + Knowledge of IPFS and decentralized storage solutions
+
+        Optimize database queries and manage data across MongoDB and Redis
+              + mongodb and Redis as hook cache on GET api to improve performance
+
+        Implement blockchain event listeners and webhooks
+
+        Real-time applications and WebSocket
+
+        Build scalable APIs that interact with multiple blockchain networks
 
         Integrate Web3 wallets and handle blockchain transactions (Privy integration experience is a plus)
 
         Work with ENS domains and blockchain name services
 
         Implement token-gating and blockchain-based authentication systems
+            + Token-gating is an access control mechanism that requires users
+              to own specific blockchain tokens (like NFTs or cryptocurrencies)
+              to access certain content, features, or services.
 
-        Build scalable APIs that interact with multiple blockchain networks
-            +  Understanding of blockchain scaling solutions and gas optimization
+        Understanding of blockchain scaling solutions and gas optimization
 
-        Optimize database queries and manage data across MongoDB and Redis
-            + Feathers.js with mongodb and Redis as hook cache on GET api to improve performance
-
-        Handle file uploads and media processing for user-generated content
-            + AWS S3 or similar cloud storage solutions
-            + Knowledge of IPFS and decentralized storage solutions
-
-        Implement blockchain event listeners and webhooks
-
-        Real-time applications and WebSocket
-
-    B. Implement FE sample app interact with BE above
+    C. Implement FE sample app interact with BE above
         - Web3.js/Ethers.js
         - NextJS
         - Tailwind
