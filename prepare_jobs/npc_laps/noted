@@ -1,4 +1,4 @@
-Implement the a sample app as requirement below:
+1. Implement the a sample app as requirement below:
 
     A. Implement BE code base with sample app cover require below
 
@@ -31,3 +31,14 @@ Implement the a sample app as requirement below:
         - NextJS
         - Tailwind
         - Redux
+
+
+2. Research
+
+- https://www.b3.fun/ecosystem
+    + Wallet: https://docs.privy.io/
+    + Game SDK: https://www.blockus.gg/
+    + Node provider: https://www.quicknode.com/
+    + Blockchain explorer: https://www.blockscout.com/
+    + NFT infrastructure: https://reservoir.tools/
+    + NFT improvement: how to list/sale/buy on open sea,...
