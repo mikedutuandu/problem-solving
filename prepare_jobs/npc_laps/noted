@@ -1,8 +1,9 @@
 1. Implement the a sample app as requirement below:
 
     A. Design and implement smart contracts for gaming achievements and NFT functionality and Deployment solidity 2 way
-        + By hardhat-ethers hardhat plugin
-        + By Hardhat ignition
+        + By hardhat-ethers hardhat plugin ( for test )
+        + By Hardhat ignition( for prod )
+        + upgrade by uups
 
     B. Implement BE code base with sample app cover require below
 
