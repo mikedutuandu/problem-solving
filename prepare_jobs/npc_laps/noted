@@ -35,9 +35,9 @@
 
     C. Implement FE sample app interact with BE above
         - Web3.js/Ethers.js
+        - Feather client(http/websocket)
         - NextJS
         - Tailwind
-        - Redux
 
 
 2. Research
